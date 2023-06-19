@@ -15,23 +15,23 @@ class ProductManager {
             description,
             price,
             thumbnail,
-            code:this.products.length+1,
+            code,
             stock,
         }
         this.products.push(products)
         return products;
     }
     
-    getProductsById = (idProducts) => {
-        const product = this.products.find(products => products.id === idProducts) || "Not Found";
+    getProductById = (idProduct) => {
+        const product = this.products.find(products => products.id === idProduct) || "Not Found";
         return product;
     }
     
  }
 
  const product = new ProductManager();
- product.addProduct("Camisa","Camisa", "Camisa Cuello Mao", 4500)
- product.addProduct("Remera","Remera", "Polo", 2300)
- product.addProduct("Camisa","Camisa", "Azul", 29000)
- product.getProductsById(1);
+ product.addProduct("Camisa","Camisa", "Camisa Cuello Mao", 4500, null, "XL")
+ product.addProduct("Remera","Remera", "Polo", 2300,null, "XS")
+ product.addProduct("Camisa","Camisa", "Azul", 29000, null, "M")
+ console.table(product.getProductById(3));
  console.log(product.getProducts());
