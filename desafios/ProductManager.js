@@ -67,7 +67,9 @@ class ProductManager {
     }
     
 
-    deleteProduct = () => {
+    deleteProduct = (idProduct) => {
+        const product = this.products.splice(products => products.id === idProduct, 1 ) || "Not found";
+        return product;
 
     }
  }
@@ -76,6 +78,10 @@ class ProductManager {
  await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
  await product.addProduct("Camisa", "Azul", 29000, null, "M")
- /* await product.updateProduct(1, "bermuda", "Hawai", 6500, null, "M") */
-/*  console.table(product.getProductById(3)); */
+/*  await product.updateProduct("bermuda", "Hawai", 6500, null, "M")
+ 
+ console.table(product.getProductById(3)); */
  console.log(await product.getProducts());
+
+/*  product.deleteProduct(1)
+ console.log(product.deleteProduct()) */
