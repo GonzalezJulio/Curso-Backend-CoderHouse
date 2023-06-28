@@ -44,19 +44,21 @@ class ProductManager {
         const product = this.products.find(products => products.id === idProduct) || "Not Found";
         return product;
     }
-
-    updateProduct = async (idProduct, newtitle, newdescription, newprice, newthumbnail, newcode, newstock ) => {
-        try {
-            const file = await fs.readFile("./products.json","utf-8")
-            const product = JSON.parse(file)
-            const productNew = this.products.find(products => products.id === idProduct) || "Not Found";
-        if (productNew === -1) {
+//  hasta aca llegue probando los cambios o modificaciones que puede hacer, debo empezar de cero, buscar comit anterior
+    updateProduct = (idProduct, newtitle, newdescription, newprice, newthumbnail, newcode, newstock ) => {
+        const idProduct = (this.products.id) => {};
+        const productNew = (products) => {
+            return products.id.map(idProduct) 
+        } ;
+        
+        const productIndex = this.products.map(productNew)
+        if (productIndex === -1) {
             console.log("NO hay Producto")
             return;
         }
-        const productUp = this.products[productNew];
+        const product = this.products[productIndex];
         const newProduct = {
-            ...productUp, 
+            ...product, 
             title: newtitle,
             description: newdescription,
             price: newprice,
@@ -66,9 +68,7 @@ class ProductManager {
             };
         this.products.push(newProduct)
 
-        }catch (e) {
-            console.log(e)
-        }
+        
         
     }
     
@@ -86,10 +86,10 @@ class ProductManager {
  /* await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
  await product.addProduct("Camisa", "Azul", 29000, null, "M") */
- await product.updateProduct(1,"bermuda", "Hawai", 6500, null, "M")
+ product.updateProduct(2,"bermuda", "Hawai", 6500, null, "M")
  
  /* console.table(product.getProductById(3)); */
- console.log(await product.updateProduct(1));
+ console.log(product.updateProduct());
 
  /* product.deleteProduct(0)
  console.log(product.deleteProduct()) */
