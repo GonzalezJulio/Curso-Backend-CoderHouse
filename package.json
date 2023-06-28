@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "clase.js",
+  "type": "module",
+  "scripts": {
+    "start": "node clases/ejercicoclase4.js",
+    "test": "echo \"Error: aquí no hay ningún test\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "moments": "^0.0.2"
+  }
+}
