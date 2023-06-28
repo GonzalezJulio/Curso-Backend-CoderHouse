@@ -1,1 +1,29 @@
-{"id":1,"title":"Camisa","description":"Camisa Cuello Mao","price":4500,"thumbnail":null,"code":"XL","stock":25}
+[
+  {
+    "id": 1,
+    "title": "Camisa",
+    "description": "Camisa Cuello Mao",
+    "price": 4500,
+    "thumbnail": null,
+    "code": "XL",
+    "stock": 25
+  },
+  {
+    "id": 2,
+    "title": "Remera",
+    "description": "Polo",
+    "price": 2300,
+    "thumbnail": null,
+    "code": "XS",
+    "stock": 25
+  },
+  {
+    "id": 3,
+    "title": "Camisa",
+    "description": "Azul",
+    "price": 29000,
+    "thumbnail": null,
+    "code": "M",
+    "stock": 25
+  }
+]

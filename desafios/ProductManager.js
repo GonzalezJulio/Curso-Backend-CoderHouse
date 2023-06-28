@@ -14,11 +14,11 @@ class ProductManager {
         return products;
     }
 
-    addProduct = async (id, title, description, price, thumbnail, code, stock = 25) => {
+    addProduct = async (title, description, price, thumbnail, code, stock = 25) => {
         try {
             const file = await fs.readFile("./products.json","utf-8")
-            const product = JSON.parse(file)
-            const products = {
+            const products = JSON.parse(file)
+            const productsAdd = {
                 id:this.products.length == 0? 1:this.products[this.products.length - 1].id + 1,
                 title,
                 description,
@@ -28,24 +28,24 @@ class ProductManager {
                 stock,
             }
             
-            this.products = products
-            products.push(products)
+            this.products = products;
+            products.push(productsAdd);
             await fs.writeFile("./products.json", JSON.stringify(products))
-            return products;
+            return productsAdd;
 
-        }catch(e){
-            console.log(e)
+        }catch (e) {
+            console.log(e);
 
         }
         
-    }
+    };
    
     getProductById = (idProduct) => {
         const product = this.products.find(products => products.id === idProduct) || "Not Found";
         return product;
     }
 
-    updateProduct = async (idProduct) => {
+    updateProduct = async (idProduct, newtitle, newdescription, newprice, newthumbnail, newcode, newstock ) => {
         try {
             const file = await fs.readFile("./products.json","utf-8")
             const product = JSON.parse(file)
@@ -54,9 +54,15 @@ class ProductManager {
             console.log("NO hay Producto")
             return;
         }
-        const products = this.products[productNew];
+        const productUp = this.products[productNew];
         const newProduct = {
-            ...products, 
+            ...productUp, 
+            title: newtitle,
+            description: newdescription,
+            price: newprice,
+            thumbnail: newthumbnail,
+            code: newcode,
+            stock: newstock,
             };
         this.products.push(newProduct)
 
@@ -68,20 +74,22 @@ class ProductManager {
     
 
     deleteProduct = (idProduct) => {
-        const product = this.products.splice(products => products.id === idProduct, 1 ) || "Not found";
-        return product;
+        
+        const product = this.products.find(products => products.id === idProduct, 1 ) || "Not found";
+        const productDelet = this.products.splice(product)
+        return productDelet;
 
     }
  }
 
  const product = new ProductManager();
- await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
+ /* await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
- await product.addProduct("Camisa", "Azul", 29000, null, "M")
-/*  await product.updateProduct("bermuda", "Hawai", 6500, null, "M")
+ await product.addProduct("Camisa", "Azul", 29000, null, "M") */
+ await product.updateProduct(1,"bermuda", "Hawai", 6500, null, "M")
  
- console.table(product.getProductById(3)); */
- console.log(await product.getProducts());
+ /* console.table(product.getProductById(3)); */
+ console.log(await product.updateProduct(1));
 
-/*  product.deleteProduct(1)
+ /* product.deleteProduct(0)
  console.log(product.deleteProduct()) */
