@@ -44,8 +44,8 @@ class ProductManager {
         const product = this.products.find(products => products.id === idProduct) || "Not Found";
         return product;
     }
-
-    updateProduct = async (idProduct) => {
+// aca lo podes encontrar en el video de ascincronia, minuto 11, debemos busca el id de producto con findIndex, una ves con el findIndex, vamos a modificar el producto 
+    updateProduct = async (idProduct, newTitle, newDescription, newPrice) => {
         try {
             const file = await fs.readFile("./products.json","utf-8")
             const products = JSON.parse(file)
@@ -54,22 +54,39 @@ class ProductManager {
             console.log("NO hay Producto")
             return;
         }
-        const productsUp = this.products[productNew];
+        const productsAdd= this.products[productNew];
         const newProduct = {
             ...productsAdd, 
+            id: this.products.length == 0 ? 1 : this.products[this.products.length - 1].id + 1,
+            title: newTitle,
+            description: newDescription,
+            price: newPrice, 
             };
-        this.products.push(newProduct)
+        this.products = products
+        products.push(newProduct)
+        await fs.writeFile("./products.json", JSON.stringify(products))
+        return newProduct
 
         }catch (e) {
             console.log(e)
         }
 
     }
-    deleteProduct = (idProduct) => {
+    deleteProduct = async (idProduct) => {
+        try {
+            const file = await fs.readFile("./products.json","utf-8")
+            const products = JSON.parse(file)
+            const product = this.products.filter(id => products.id === !idProduct);
+            
+            
+            this.products = products;
+            products.push(product)
+            await fs.writeFile("./products.json", JSON.stringify(products))
+            return product;
+        } catch (e) {
+            console.log(e)
+        }
         
-        const product = this.products.find(products => products.id === idProduct, 1 ) || "Not found";
-        const productDelet = this.products.splice(product)
-        return productDelet;
     
     }
 
@@ -78,14 +95,15 @@ class ProductManager {
  }
 
  const product = new ProductManager();
- await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
+/*  await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
- await product.addProduct("Camisa", "Azul", 29000, null, "M")
- /* await product.updateProduct(1, "bermuda", "Hawai", 6500, null, "M") */
-/*  console.table(product.getProductById(3)); */
+ await product.addProduct("Camisa", "Azul", 29000, null, "M") */
+ await product.updateProduct(1, "bermuda", "Hawai", 6500,)
+/* console.table(product.getProductById(3)); */
  console.log(await product.getProducts());
 
-
+/* await product.deleteProduct(1)
+console.log( await product.deleteProduct())  */
 
 
 
