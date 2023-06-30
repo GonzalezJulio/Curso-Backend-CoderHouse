@@ -49,7 +49,7 @@ class ProductManager {
         try {
             const file = await fs.readFile("./products.json","utf-8")
             const products = JSON.parse(file)
-            const productNew = this.products.find(products => products.id === idProduct) || "Not Found";
+            const productNew = this.products.find(products => products.id == idProduct) || "Not Found";
         if (productNew === -1) {
             console.log("NO hay Producto")
             return;
@@ -72,22 +72,24 @@ class ProductManager {
         }
 
     }
-    deleteProduct = async (idProduct) => {
+    deleteProduct = async(idProduct) => {
         try {
             const file = await fs.readFile("./products.json","utf-8")
-            const products = JSON.parse(file)
-            const product = this.products.filter(id => products.id === !idProduct);
-            
-            
-            this.products = products;
-            products.push(product)
-            await fs.writeFile("./products.json", JSON.stringify(products))
-            return product;
-        } catch (e) {
+        const products = JSON.parse(file)
+        let indiceProducto = products.findIndex(function(product) {
+            return product.id == idProduct;
+        });
+        if (indiceProducto !== -1) {
+            this.products.splice(indiceProducto);
+            console.log('El producto se elimino del carrito');
+        } else {
+            console.log('el producto no se encontro en el carrito')
+        }
+
+        }catch(e) {
             console.log(e)
         }
         
-    
     }
 
 
@@ -97,13 +99,14 @@ class ProductManager {
  const product = new ProductManager();
 /*  await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
- await product.addProduct("Camisa", "Azul", 29000, null, "M") */
- await product.updateProduct(1, "bermuda", "Hawai", 6500,)
+ await product.addProduct("Camisa", "Azul", 29000, null, "M")
+ await product.updateProduct(1, "bermuda", "Hawai", 6500,) */
+ await product.deleteProduct(3)
 /* console.table(product.getProductById(3)); */
  console.log(await product.getProducts());
 
-/* await product.deleteProduct(1)
-console.log( await product.deleteProduct())  */
+
+
 
 
 
