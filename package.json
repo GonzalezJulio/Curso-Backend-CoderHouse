@@ -10,8 +10,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "moments": "^0.0.2"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
