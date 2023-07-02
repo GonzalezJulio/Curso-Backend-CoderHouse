@@ -1,11 +1,10 @@
 import fs from "fs"
 import crypto from "crypto"
 
-class userManager {
+export default class userManager {
 
-    constructor () {
-        this.userManager = [];
-        this.file = "./userCreate.json"
+    constructor (file) {
+        this.file = file
     }
     async getUser() {
         try {
@@ -19,32 +18,41 @@ class userManager {
 
         }
     }
+    async updateUser() {};
 
     // usuario = {name, lastname, user, password } 
     async createUser(user){
         const users = await this.getUser();
         user.salt = crypto.randomBytes(128).toString('base64')
         user.password = crypto
-        .createHmac('sha256', user.salt)
+        .createHmac("sha256", user.salt)
         .update(user.password)
-        .digest('hex')
+        .digest("hex")
 
         users.push(user)
-        await fs.promises.writeFile(this.file, JSON.stringify(users))
+        try {
+            await fs.promises.writeFile(this.file, JSON.stringify(users))
+        } catch(e) {
+            return "No se ha podido escrbir el archivo!"
+        }
 
     }
 
     async validateUser(username, password) {
+        const users = await this.getUser();
+        const user = users.find((user) => user.name == username);
+        if (!user) return "Error, usuario no exite!";
+        const loginHash = crypto
+        .createHmac("sha256", user.salt)
+        .update(password)
+        .digest("hex");
 
-    }
+        return loginHash == user.password
+        ? "Usuario Loggeado!"
+        : "usuario/contrase;a incorrecta";
+}
 }
 
-const users = new userManager('./userCreate.json')
-await users.createUser ({
-    name: "Julio",
-    lastname: "Gonzalez",
-    user: "Aresden113",
-    password: "coder1234",
 
-})
+
 
