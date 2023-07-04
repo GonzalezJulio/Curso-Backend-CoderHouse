@@ -1,5 +1,5 @@
 import fs from "fs/promises"
-new ProductManager('products')
+
 
 class ProductManager {
 
@@ -42,7 +42,7 @@ class ProductManager {
     }
 
     getProductById = (idProduct) => {
-        const product = this.products.find(products => products.id === idProduct) || "Not Found";
+        const product = this.products.find(products => products.id === idProduct, 1);
         return product;
     }
 // aca lo podes encontrar en el video de ascincronia, minuto 11, debemos busca el id de producto con findIndex, una ves con el findIndex, vamos a modificar el producto 
@@ -50,7 +50,7 @@ class ProductManager {
         try {
             const file = await fs.readFile("./products.json","utf-8")
             const products = JSON.parse(file)
-            const productNew = products.splice((products) => products.id == idProduct);
+            const productNew = products.splice((products) => products.id == idProduct, 1);
         if (productNew === -1) {
             console.log("NO hay Producto")
             return;
