@@ -1,24 +1,42 @@
 import fs from "fs/promises"
 
 
-class ProductManager {
+export default class ProductManager {
 
-    constructor (path) {
-        this.path = `./db/${path}.json`
+    constructor () {
+        this.path = `./products.json`
         this.products = [];
 
     }
 
-    getProducts = async () => {
-        const file = await fs.readFile("./products.json","utf-8")
-        const products = JSON.parse(file)
-        return products;
+    async #saveProduct(products) {
+        await fs.writeFile(this.path, JSON.stringify(products) )
+        this.products = products;
+        return products
     }
 
-    addProduct = async (title, description, price, thumbnail, code, stock = 25) => {
+    getProducts = async () => {
         try {
-            const file = await fs.readFile("./products.json","utf-8")
+            const file = await fs.readFile(this.path,"utf-8")
             const products = JSON.parse(file)
+            return products;
+        } catch(e) {
+            await this.#saveProduct([])
+        }
+    }
+
+    addProduct = async (product) => {
+        const {
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+        } = product;
+        try {
+            const products = await this.getProducts();
+            
             const productsAdd = {
                 id: products.length == 0 ? 1:products[products.length - 1].id + 1,
                 title,
@@ -31,7 +49,7 @@ class ProductManager {
 
             this.products = products
             products.push(productsAdd)
-            await fs.writeFile("./products.json", JSON.stringify(products))
+            await this.#saveProduct(products)
             return productsAdd;
 
         }catch(e){
@@ -45,7 +63,7 @@ class ProductManager {
         const product = this.products.find(products => products.id === idProduct, 1);
         return product;
     }
-// aca lo podes encontrar en el video de ascincronia, minuto 11, debemos busca el id de producto con findIndex, una ves con el findIndex, vamos a modificar el producto 
+
     updateProduct = async (idProduct, newTitle, newDescription, newPrice) => {
         try {
             const file = await fs.readFile("./products.json","utf-8")
@@ -73,39 +91,25 @@ class ProductManager {
         }
 
     }
-    deleteProduct = async(idProduct) => {
-        try {
-            const file = await fs.readFile("./products.json","utf-8")
-        const products = JSON.parse(file)
-        let indiceProducto = products.findIndex(function(product) {
-            return product.id == idProduct;
-        });
-        if (indiceProducto !== -1) {
-            this.products.splice(indiceProducto);
-            console.log('El producto se elimino del carrito');
-        } else {
-            console.log('el producto no se encontro en el carrito')
-        }
-
-        }catch(e) {
-            console.log(e)
-        }
-        
+    async deleteProductById(idProduct) {
+        const products = await this.getProducts();
+        const newProducts = products.filter((product) => product.id != idProduct);
+        await this.#saveProduct(newProducts); 
     }
 
 
     
  }
 
- const product = new ProductManager();
- /* await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
+/*  const product = new ProductManager();
+ await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
- await product.addProduct("Camisa", "Azul", 29000, null, "M") */
+ await product.addProduct("Camisa", "Azul", 29000, null, "M")
  await product.updateProduct(1, "bermuda", "Hawai", 6500,)
-/*  await product.deleteProduct(3) */
-/* console.table(product.getProductById(3)); */
+ await product.deleteProduct(3)
+console.table(product.getProductById(3));
  console.log(await product.getProducts());
-
+ */
 
 
 

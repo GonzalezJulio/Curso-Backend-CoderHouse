@@ -1,1 +1,18 @@
-[{"name":"Julio","lastname":"Gonzalez","user":"Aresden113","password":"2198b88fe8da484f1cee03df2cbd0d0f5035c1d12d92fd3caca4f97d61f3c6f0","salt":"lVadqpHu2ics7hiP0MBgj2WF213/wUPl+d3Z3XthGS3px1yd56oii0o40i3l1m6XroK7w4zCdy73Ri9q88urk1DfIzWL0LS0atxhR5cemDnZCcOM/OxozTJNOpROGG/Iv/mcERU1uqSTleHPZppkU3lfprUxQeVyOjqOKyJEZZM="},{"name":"Julio","lastname":"Gonzalez","user":"Aresden113","password":"10a73ccbfc240ab61c239fe2fe1c77a573c5e15743b638f93cb9b87820a6195c","salt":"mrzRRzL8VytB7wbU3U2hXfTMsiYvlD84v6ex9xlp3MwEJygRcQD6fe1hAhTQpXiMUPddrPULj/0o7Bi0v/AvY7J+F7Ihu6Pu9Zfbu1jC4XK6mZ9s4ynrIFAH4Vycqy1AHykmdPG4iSBfCorbMaL2w+Xa542Z3LQSDKpEOd9+ze4="}]
+[
+  {
+    "id": 1,
+    "name": "Julio",
+    "lastname": "Gonzalez",
+    "user": "Aresden113",
+    "password": "2198b88fe8da484f1cee03df2cbd0d0f5035c1d12d92fd3caca4f97d61f3c6f0",
+    "salt": "lVadqpHu2ics7hiP0MBgj2WF213/wUPl+d3Z3XthGS3px1yd56oii0o40i3l1m6XroK7w4zCdy73Ri9q88urk1DfIzWL0LS0atxhR5cemDnZCcOM/OxozTJNOpROGG/Iv/mcERU1uqSTleHPZppkU3lfprUxQeVyOjqOKyJEZZM="
+  },
+  {
+    "id": 2,
+    "name": "Julio",
+    "lastname": "Gonzalez",
+    "user": "Aresden113",
+    "password": "10a73ccbfc240ab61c239fe2fe1c77a573c5e15743b638f93cb9b87820a6195c",
+    "salt": "mrzRRzL8VytB7wbU3U2hXfTMsiYvlD84v6ex9xlp3MwEJygRcQD6fe1hAhTQpXiMUPddrPULj/0o7Bi0v/AvY7J+F7Ihu6Pu9Zfbu1jC4XK6mZ9s4ynrIFAH4Vycqy1AHykmdPG4iSBfCorbMaL2w+Xa542Z3LQSDKpEOd9+ze4="
+  }
+]
