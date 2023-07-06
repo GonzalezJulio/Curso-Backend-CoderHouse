@@ -3,8 +3,8 @@ import fs from "fs/promises"
 
 export default class ProductManager {
 
-    constructor () {
-        this.path = `./products.json`
+    constructor (path) {
+        this.path = `./${path}.json`
         this.products = [];
 
     }
@@ -80,6 +80,7 @@ export default class ProductManager {
             title: newTitle,
             description: newDescription,
             price: newPrice, 
+            ...productAdd, 
             };
         this.products = products
         products.push(newProduct)

@@ -10,9 +10,9 @@ app.use(express.urlencoded({ extended: true }))
 
 app.get("/products", async (req, res) => {
     try {
-        const product = await productManager.getProducts();
-        res.send(product)
-    } catch(e) {
+        const products = await productManager.getProducts();
+        res.send(products)
+    } catch (e) {
         res.status(502).send({ error: true })
     }
 });
@@ -20,7 +20,7 @@ app.get("/products", async (req, res) => {
 // * POST
 app.post("/products", async (req, res) => {
     const body = req.body;
-    if (!nody.title || !body.description || !body.price) {
+    if (!body.title || !body.description || !body.price) {
         res.send({ error:  true, msg: "Contendio faltante" });
     } else {
         try {
@@ -28,7 +28,7 @@ app.post("/products", async (req, res) => {
             res.send(result);
         } catch (e) {
             console.log(e);
-            res,status(502).send({ error: true });
+            res.status(502).send({ error: true });
         }
     }
 })
@@ -37,14 +37,14 @@ app.put("/products", async (req, res) => {
     try {
         const { idProduct } = req.params;
         const product = req.body;
-        const result = await productManager.updateProduct(idProduct, evento);
+        const result = await productManager.updateProduct(idProduct, product);
         res.send({ update: true });
     }catch (e) {
         res.status(502).send({ error: true });
     }
 })
 
-app.get("/products/:id", async (req, res) => {
+app.get("/products/:idProduct", async (req, res) => {
     try{
         const { idProduct } = req.params;
         const product = await productManager.getProductById(idProduct);
@@ -54,7 +54,7 @@ app.get("/products/:id", async (req, res) => {
     }
 })
 
-app.delete("/product/:id", async (req, res) => {
+app.delete("/product/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
         await productManager.deleteProductById(idProduct);
