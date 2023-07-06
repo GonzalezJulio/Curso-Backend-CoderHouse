@@ -25,15 +25,10 @@ export default class ProductManager {
         }
     }
 
-    addProduct = async (product) => {
-        const {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-        } = product;
+    addProduct = async (title, description, price, thumbnail, code, stock = 25) => {
+        
+            
+        
         try {
             const products = await this.getProducts();
             
