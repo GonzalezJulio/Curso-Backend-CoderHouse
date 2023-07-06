@@ -3,21 +3,21 @@ import fs from "fs/promises"
 
 export default class ProductManager {
 
-    constructor (path) {
-        this.path = `./${path}.json`
+    constructor () {
+        this.path = "./db/products.json"
         this.products = [];
 
     }
 
     async #saveProduct(products) {
-        await fs.writeFile(this.path, JSON.stringify(products) )
+        await fs.writeFile("./db/products.json", JSON.stringify(products) )
         this.products = products;
         return products
     }
 
     getProducts = async () => {
         try {
-            const file = await fs.readFile(this.path,"utf-8")
+            const file = await fs.readFile("./db/products.json","utf-8")
             const products = JSON.parse(file)
             return products;
         } catch(e) {
@@ -66,7 +66,7 @@ export default class ProductManager {
 
     updateProduct = async (idProduct, newTitle, newDescription, newPrice) => {
         try {
-            const file = await fs.readFile("./products.json","utf-8")
+            const file = await fs.readFile("./db/products.json","utf-8")
             const products = JSON.parse(file)
             const productNew = products.splice((products) => products.id == idProduct, 1);
         if (productNew === -1) {
@@ -80,11 +80,11 @@ export default class ProductManager {
             title: newTitle,
             description: newDescription,
             price: newPrice, 
-            ...productAdd, 
+            
             };
         this.products = products
         products.push(newProduct)
-        await fs.writeFile("./products.json", JSON.stringify(products))
+        await fs.writeFile("./db/products.json", JSON.stringify(products))
         return newProduct
 
         }catch (e) {
