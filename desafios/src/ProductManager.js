@@ -3,21 +3,21 @@ import fs from "fs/promises"
 
 export default class ProductManager {
 
-    constructor () {
-        this.path = `./db/products.json`;
+    constructor (path) {
+        this.path = `./db/${path}.json`;
         this.products = [];
 
     }
 
     async #saveProduct(products) {
-        await fs.writeFile("./db/products.json", JSON.stringify(products) )
+        await fs.writeFile(this.path, JSON.stringify(products))
         this.products = products;
         return products
     }
 
     getProducts = async () => {
         try {
-            const file = await fs.readFile("./db/products.json","utf-8")
+            const file = await fs.readFile(this.path,"utf-8")
             const products = JSON.parse(file)
             return products;
         } catch(e) {
@@ -71,8 +71,7 @@ export default class ProductManager {
         if (productIndex == -1) return false;
 
         products[productIndex] = {
-            ...products[productIndex],
-            ...product,
+            ...products[productIndex], ...products,
         }
         await this.#saveProduct(products)
     } 
@@ -87,15 +86,14 @@ export default class ProductManager {
 
     
  }
-/* const product = new ProductManager();
+/* const product = new ProductManager('products');
  await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
  await product.addProduct("Camisa", "Azul", 29000, null, "M")
  await product.updateProduct(1, "bermuda", "Hawai", 6500,)
  await product.deleteProduct(3)
 console.table(product.getProductById(3)); 
- console.log(await product.getProducts()); */
- 
+ console.log(await product.getProducts());  */
 
 
 

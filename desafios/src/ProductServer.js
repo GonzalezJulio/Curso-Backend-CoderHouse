@@ -8,7 +8,7 @@ const app = express()
 app.use(express.json()) 
 app.use(express.urlencoded({ extended: true }))
 
-app.get("/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
     try {
         const products = await productManager.getProducts();
         res.send(products)
@@ -18,22 +18,19 @@ app.get("/products", async (req, res) => {
 });
 
 // * POST
-app.post("/products", async (req, res) => {
+app.post("/api/products", async (req, res) => {
     const body = req.body;
-    if ( !body.title || !body.description || !body.price || !body.thumbnail || !body.code || !body.stock) {
-        res.send({ error:  true, msg: "Contendio faltante" });
-    } else {
-        try {
+    try {
             const result = await productManager.addProduct(body);
             res.send(result);
         } catch (e) {
             console.log(e);
             res.status(502).send({ error: true });
         }
-    }
+    
 })
 
-app.put("/products", async (req, res) => {
+app.put("/api/products/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
         const product = req.body;
@@ -44,7 +41,7 @@ app.put("/products", async (req, res) => {
     }
 })
 
-app.get("/products/:idProduct", async (req, res) => {
+app.get("/api/products/:idProduct", async (req, res) => {
     try{
         const { idProduct } = req.params;
         const product = await productManager.getProductById(idProduct);
@@ -54,7 +51,7 @@ app.get("/products/:idProduct", async (req, res) => {
     }
 })
 
-app.delete("/product/:idProduct", async (req, res) => {
+app.delete("/api/product/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
         await productManager.deleteProductById(idProduct);
