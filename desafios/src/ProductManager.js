@@ -70,9 +70,7 @@ export default class ProductManager {
         const productIndex = products.findIndex((product) => product.id == idProduct);
         if (productIndex == -1) return false;
 
-        products[productIndex] = {
-            ...products[productIndex], ...products,
-        }
+        products[productIndex] = {...products[productIndex], ...product}
         await this.#saveProduct(products)
     } 
     
