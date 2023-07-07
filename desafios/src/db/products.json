@@ -1,35 +1,26 @@
 [
   {
-    "id": 7,
-    "title": {
-      "id": 1,
-      "title": "Camisa Cuello Mao",
-      "description": 4500,
-      "price": null,
-      "thumbnail": "XL",
-      "stock": 25
-    }
+    "id": 1,
+    "title": "Camisa Cuello Mao",
+    "description": 4500,
+    "price": null,
+    "thumbnail": "XL",
+    "stock": 25
   },
   {
-    "id": 8,
-    "title": {
-      "id": 1,
-      "title": "Camisa Cuello Mao",
-      "description": 4500,
-      "price": null,
-      "thumbnail": "XL",
-      "stock": 25
-    }
+    "id": 2,
+    "title": "Polo",
+    "description": 2300,
+    "price": null,
+    "thumbnail": "XS",
+    "stock": 25
   },
   {
-    "id": 9,
-    "title": {
-      "id": 1,
-      "title": "Camisa Cuello Mao",
-      "description": 4500,
-      "price": null,
-      "thumbnail": "XL",
-      "stock": 25
-    }
+    "id": 3,
+    "title": "Azul",
+    "description": 29000,
+    "price": null,
+    "thumbnail": "M",
+    "stock": 25
   }
 ]

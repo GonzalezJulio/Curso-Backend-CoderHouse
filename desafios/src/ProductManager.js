@@ -4,7 +4,7 @@ import fs from "fs/promises"
 export default class ProductManager {
 
     constructor () {
-        this.path = "./db/products.json"
+        this.path = `./db/products.json`;
         this.products = [];
 
     }
@@ -25,13 +25,17 @@ export default class ProductManager {
         }
     }
 
-    addProduct = async (title, description, price, thumbnail, code, stock = 25) => {
-        
-            
-        
+    addProduct = async (productAdd) => {
+        const {
+            title,
+            description,
+            price,
+            thumbnail = null,
+            code,
+            stock = 50,
+        } = productAdd;
         try {
             const products = await this.getProducts();
-            
             const productsAdd = {
                 id: products.length == 0 ? 1:products[products.length - 1].id + 1,
                 title,
@@ -54,39 +58,26 @@ export default class ProductManager {
 
     }
 
-    getProductById = (idProduct) => {
-        const product = this.products.find(products => products.id === idProduct, 1);
+    async getProductById(idProduct) {
+        const products = await this.getProducts();
+        const product = products.find((product) => product.id == idProduct);
         return product;
-    }
+    } 
+    
 
-    updateProduct = async (idProduct, newTitle, newDescription, newPrice) => {
-        try {
-            const file = await fs.readFile("./db/products.json","utf-8")
-            const products = JSON.parse(file)
-            const productNew = products.splice((products) => products.id == idProduct, 1);
-        if (productNew === -1) {
-            console.log("NO hay Producto")
-            return;
+    async updateProduct(idProduct, product) {
+        const products = await this.getProducts();
+        const productIndex = products.findIndex((product) => product.id == idProduct);
+        if (productIndex == -1) return false;
+
+        products[productIndex] = {
+            ...products[productIndex],
+            ...product,
         }
-        const productsAdd= this.products[productNew];
-        const newProduct = {
-            ...productsAdd, 
-            id: products.length == 0 ? 1:products[products.length - 1].id + 1,
-            title: newTitle,
-            description: newDescription,
-            price: newPrice, 
-            
-            };
-        this.products = products
-        products.push(newProduct)
-        await fs.writeFile("./db/products.json", JSON.stringify(products))
-        return newProduct
-
-        }catch (e) {
-            console.log(e)
-        }
-
-    }
+        await this.#saveProduct(products)
+    } 
+    
+    
     async deleteProductById(idProduct) {
         const products = await this.getProducts();
         const newProducts = products.filter((product) => product.id != idProduct);
@@ -96,16 +87,15 @@ export default class ProductManager {
 
     
  }
-
-/*  const product = new ProductManager();
+/* const product = new ProductManager();
  await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
  await product.addProduct("Remera", "Polo", 2300,null, "XS")
  await product.addProduct("Camisa", "Azul", 29000, null, "M")
  await product.updateProduct(1, "bermuda", "Hawai", 6500,)
  await product.deleteProduct(3)
-console.table(product.getProductById(3));
- console.log(await product.getProducts());
- */
+console.table(product.getProductById(3)); 
+ console.log(await product.getProducts()); */
+ 
 
 
 

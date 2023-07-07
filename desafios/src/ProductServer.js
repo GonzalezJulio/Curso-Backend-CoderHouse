@@ -20,7 +20,7 @@ app.get("/products", async (req, res) => {
 // * POST
 app.post("/products", async (req, res) => {
     const body = req.body;
-    if (!body.title || !body.description || !body.price) {
+    if ( !body.title || !body.description || !body.price || !body.thumbnail || !body.code || !body.stock) {
         res.send({ error:  true, msg: "Contendio faltante" });
     } else {
         try {
@@ -65,5 +65,5 @@ app.delete("/product/:idProduct", async (req, res) => {
 })
 
 app.listen(8080, () => {
-    console.log("Conectados!");
+    console.log("ATR!");
 });
