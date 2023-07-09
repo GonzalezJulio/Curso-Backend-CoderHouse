@@ -1,7 +1,7 @@
 import express from "express";
 import userManager from "./userManager.js";
 const app = express()
-const manager = new userManager("./userCreate.json")
+const manager = new userManager("userCreate")
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json()) 
 

@@ -17,7 +17,7 @@ export default class ProductManager {
 
     getProducts = async () => {
         try {
-            const file = await fs.readFile(this.path,"utf-8")
+            const file = await fs.readFile(this.path, "utf-8")
             const products = JSON.parse(file)
             return products;
         } catch(e) {
@@ -77,9 +77,11 @@ export default class ProductManager {
     
     async deleteProductById(idProduct) {
         const products = await this.getProducts();
-        const newProducts = products.filter((product) => product.id != idProduct);
+        const newProducts = products.filter(product => product.id != idProduct);
         await this.#saveProduct(newProducts); 
     }
+
+    
 
 
     

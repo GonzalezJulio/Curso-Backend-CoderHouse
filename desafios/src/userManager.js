@@ -4,20 +4,19 @@ import crypto from "crypto"
 export default class userManager {
 
     constructor (file) {
-        this.file = file
+        this.file = `./db/${file}.json`;
     }
     async getUser() {
         try {
-            const data =  await fs.promises.readFile(this.file, "utf-8")
-            const users = JSON.parse(data);
-            return users;
-
-        }catch (e) {
-            await fs.promises.writeFile(this.file, JSON.stringify([]));
-            return [];
-
+          const data = await fs.promises.readFile(this.file, "utf-8");
+          const users = JSON.parse(data);
+          return users;
+        } catch (e) {
+          await fs.promises.writeFile(this.file, JSON.stringify([]));
+          return [];
         }
-    }
+      }
+
     async updateUser() {};
 
     // usuario = {name, lastname, user, password } 

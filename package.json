@@ -11,8 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "moments": "^0.0.2"
+    "express": "^4.18.2",
+    "moments": "^0.0.2",
+    "multer": "^1.4.5-lts.1"
   },
-  "devDependencies": {},
   "description": ""
 }
