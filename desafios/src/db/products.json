@@ -1,15 +1,6 @@
 [
   {
-    "id": 1,
-    "title": "Jean",
-    "description": "Rojo",
-    "price": 56000,
-    "thumbnail": null,
-    "code": "M-S",
-    "stock": 25
-  },
-  {
-    "id": 2,
+    "id": 3,
     "title": "Campera",
     "description": "Jean",
     "price": 75000,
@@ -19,65 +10,20 @@
   },
   {
     "id": 4,
-    "title": "Campera De Invierno",
-    "description": "Relleno de Pluma",
-    "price": 150000,
+    "title": "Campera",
+    "description": "Jean",
+    "price": 75000,
     "thumbnail": null,
-    "code": "S-M-L_XL",
+    "code": "M-S",
     "stock": 25
   },
   {
     "id": 5,
-    "title": "Campera De Invierno",
-    "description": "Relleno de Pluma",
-    "price": 150000,
+    "title": "Bermuda Levis ",
+    "description": "Jean",
+    "price": 75000,
     "thumbnail": null,
-    "code": "S-M-L_XL",
+    "code": "M-S",
     "stock": 25
-  },
-  {
-    "id": 6,
-    "title": "Jean Clasico Levis",
-    "description": "Chupin ",
-    "price": 15000,
-    "thumbnail": null,
-    "code": "S-M-L_XL",
-    "stock": 5
-  },
-  {
-    "id": 7,
-    "title": "Jean Clasico Levis",
-    "description": "Chupin ",
-    "price": 15000,
-    "thumbnail": null,
-    "code": "S-M-L_XL",
-    "stock": 5
-  },
-  {
-    "id": 8,
-    "title": "Jean Clasico Levis",
-    "description": "Chupin ",
-    "price": 15000,
-    "thumbnail": null,
-    "code": "S-M-L_XL",
-    "stock": 5
-  },
-  {
-    "id": 9,
-    "title": "Jean Clasico Levis",
-    "description": "Chupin ",
-    "price": 15000,
-    "thumbnail": null,
-    "code": "S-M-L_XL",
-    "stock": 5
-  },
-  {
-    "id": 10,
-    "title": "Jean Clasico Levis",
-    "description": "Chupin ",
-    "price": 15000,
-    "thumbnail": null,
-    "code": "S-M-L_XL",
-    "stock": 5
   }
 ]

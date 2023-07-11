@@ -51,7 +51,3 @@ export default class userManager {
         : "usuario/contrase;a incorrecta";
 }
 }
-
-
-
-

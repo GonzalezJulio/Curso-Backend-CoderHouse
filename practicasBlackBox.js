@@ -1,29 +1,29 @@
-// Array de productos en el carrito de compras
-let carrito = [
-    { id: 1, nombre: 'Camiseta', precio: 20 },
-    { id: 2, nombre: 'Pantalón', precio: 30 },
-    { id: 3, nombre: 'Zapatos', precio: 50 }
-  ];
+// Create a new Express application.
+const express = require('express');
+const app = express();
 
-  // Función para eliminar un producto del carrito de compras
-  function eliminarDelCarrito(idProducto) {
-    // Encontrar el índice del producto en el carrito
-    let indiceProducto = carrito.findIndex(function(producto) {
-      return producto.id === idProducto;
-    });
+// Install the `body-parser` middleware.
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
-    if (indiceProducto !== -1) {
-      // Si se encontró el producto, eliminarlo del carrito
-      carrito.splice(indiceProducto, 1);
-      console.log('El producto se eliminó del carrito.');
-    } else {
-      console.log('El producto no se encontró en el carrito.');
-    }
+// Create a new route for the shopping cart.
+app.post('/cart', (req, res) => {
+
+  // Use the `body-parser` middleware to parse the request body.
+  const cart = req.body;
+
+  // Create a new `Cart` object.
+  const cart = new Cart();
+
+  // Add the items from the request body to the cart.
+  for (const item of cart.items) {
+    cart.addItem(item);
   }
 
-  // Ejemplo de uso
-  eliminarDelCarrito(2); // El producto se eliminó del carrito.
-  eliminarDelCarrito(4); // El producto no se encontró en el carrito.
+  // Return the cart to the client.
+  res.json(cart);
 
-  console.log(carrito);
-  // Resultado: [{ id: 1, nombre: 'Camiseta', precio: 20 }, { id: 3, nombre: 'Zapatos', precio: 50 }]
+});
+
+// Start the Express server.
+app.listen(3000, () => console.log('Server started on port 3000'));

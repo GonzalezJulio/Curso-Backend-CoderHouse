@@ -81,19 +81,10 @@ export default class ProductManager {
         await this.#saveProduct(newProducts); 
     }
 
-    
+
+}
 
 
-    
- }
-/* const product = new ProductManager('products');
- await product.addProduct("Camisa", "Camisa Cuello Mao", 4500, null, "XL")
- await product.addProduct("Remera", "Polo", 2300,null, "XS")
- await product.addProduct("Camisa", "Azul", 29000, null, "M")
- await product.updateProduct(1, "bermuda", "Hawai", 6500,)
- await product.deleteProduct(3)
-console.table(product.getProductById(3)); 
- console.log(await product.getProducts());  */
 
 
 
