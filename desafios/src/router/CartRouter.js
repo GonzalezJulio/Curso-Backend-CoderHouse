@@ -7,7 +7,7 @@ const cartRouter = Router();
 cartRouter.post("/", async(req, res) => {
     const body = req.body;
     try{
-        const result = await cartManager.addCart(body);
+        const result = await cartManager.createCart(body);
         res.send(result);
 
     } catch (e) {
@@ -17,7 +17,7 @@ cartRouter.post("/", async(req, res) => {
 })
 
 //  Devuelve Carrito
-cartRouter.get("/:idCart/", async (req, res) => {
+cartRouter.get("/:idCart", async (req, res) => {
     try{
         const { idCart } = req.params;
         const cart = await cartManager.getCartById(idCart);
@@ -28,15 +28,15 @@ cartRouter.get("/:idCart/", async (req, res) => {
 })
 
 //agregar producto al id del carrito
-cartRouter.post("/:idCart/product", async(req, res) => {
+cartRouter.post("/:idCart/products/:idProduct", async(req, res) => {
     
     try{
-        const { idCart, product, idProduct } = req.params;
-        const result = await cartManager.cartAddProduct(product, idCart, idProduct);
+        const { idCart, idProduct } = req.params;
+        const result = await cartManager.addProductToCart(idProduct, idCart);
         res.send(result);
 
     } catch (e) {
-        console.log(e);
+        
         res.status(500).send({ error: true });
     }
 })

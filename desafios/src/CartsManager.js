@@ -24,8 +24,7 @@ export default class CartManager {
         }
     }
 
-    async addCart(cartAdd) {
-        
+    async createCart(cartAdd) {
         const {
             
             product,
@@ -46,6 +45,7 @@ export default class CartManager {
 
         }
       }
+      
 
       async getCartById(idCart) {
         const carts = await this.getCart();
@@ -54,28 +54,37 @@ export default class CartManager {
 
       }
 
-      async updateCart(idCart, cart) {
-        const carts = await this.getCart();
-        const cartIndex = carts.findIndex((cart) => cart.id == idCart);
-        if (cartIndex == -1) return false;
+      async  addProductToCart(idCart, idProduct){
+        const carts = this.getCart();
 
-        carts[cartIndex] = {...carts[cartIndex], ...cart}
-        await this.#saveCart(carts)
-    } 
+        const cartIndex = carts.findIndex((cart) => cart.id == idCart)
+        if(cartIndex == -1){
+            return {err: 'el Id no existe en el carrito'};
+        }
 
-    async cartAddProduct(idCart, idProduct, product, quantity) {
-        const carts = await this.getCart();
-        const cart = carts.filter((cart) => cart.id == idCart)
+        const productIndex = carts[cartIndex].products.findIndex(products => products.id == idProduct)
+        if(productIndex == -1){
+            const addTo = {id: idProduct, quantity: 1}
+            carts[cartIndex].products.push(addTo)
+            await this.#saveCart(carts)
 
-        const productIndex = product.findeIndex((product) => product.id == idProduct)
-        if(productIndex == -1) return false;
+            return{message: 'Producto Agregado', cart: carts[cartIndex].products}
+        }else{
+            carts[cartIndex].products[productIndex].quantity += 1;
+            await this.#saveCart(carts)
+            return{message: 'Producto Agregado', cart: carts[cartIndex].products}
 
-        carts[productIndex] = {...carts[productIndex], ...carts},
-        await this.#saveCart();
-
-
+        }
+      }
+    
+    
+    
+    
+    
     }
 
-    
-}
+      
 
+    
+
+    
