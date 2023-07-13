@@ -35,7 +35,7 @@ export default class CartManager {
             const cart = await this.getCart();
             const cartAdd = {
                 id: cart.length == 0 ? 1:cart[cart.length - 1].id + 1,
-               product: [],
+               products: [],
             }
             this.cart = cart
             cart.push(cartAdd)
