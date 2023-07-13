@@ -1,13 +1,15 @@
 import fs from "fs/promises";
 
 export default class CartManager {
+    
+
     constructor (path) {
         this.path = `./db/${path}.json`;
         this.carts = [];
     }
     
     async #saveCart(carts) {
-        await fs.writeFile(this.path, JSON.stringify(carts))
+        await fs.writeFile(this.path, JSON.stringify(carts, null, 2))
         this.carts = carts;
         return carts
     }
@@ -48,32 +50,40 @@ export default class CartManager {
       
 
       async getCartById(idCart) {
-        const carts = await this.getCart();
-        const cart = carts.find((cart) => cart.id == idCart)
-        return cart;
+        try{
+            const carts = await this.getCart();
+            const cart = carts.find(cart => cart.id == idCart)
+            return cart;
+
+        }catch(e){
+            console.log(`Error, carrito no encontrado`)
+        }
 
       }
 
-      async  addProductToCart(idCart, idProduct){
-        const carts = this.getCart();
-
-        const cartIndex = carts.findIndex((cart) => cart.id == idCart)
-        if(cartIndex == -1){
-            return {err: 'el Id no existe en el carrito'};
-        }
-
-        const productIndex = carts[cartIndex].products.findIndex(products => products.id == idProduct)
-        if(productIndex == -1){
-            const addTo = {id: idProduct, quantity: 1}
-            carts[cartIndex].products.push(addTo)
-            await this.#saveCart(carts)
-
-            return{message: 'Producto Agregado', cart: carts[cartIndex].products}
-        }else{
-            carts[cartIndex].products[productIndex].quantity += 1;
-            await this.#saveCart(carts)
-            return{message: 'Producto Agregado', cart: carts[cartIndex].products}
-
+      async addProductToCart(idCart, prod){
+        try{
+            const carts = await this.getCart();
+            const cart = carts.find((i) => i.id == idCart);
+            const cartIndex = carts.indexOf(cart);
+            if (cart !== undefined) {
+                const cartLo = carts[cartIndex].products.find(i => i.id == prod.id);
+                const indexCart = carts[cartIndex].products.indexOf(cartLo);
+                if(cartLo){
+                    carts[cartIndex].products[indexCart].quantity++;
+                    await this.#saveCart(carts)
+                    return carts
+                }else{
+                    prod.quantity = 1;
+                    carts[cartIndex].products.push(prod)
+                    await this.#saveCart(carts)
+                    return carts;
+                }
+            }else{
+                return null
+            }
+        }catch (e){
+            console.log(e)
         }
       }
     

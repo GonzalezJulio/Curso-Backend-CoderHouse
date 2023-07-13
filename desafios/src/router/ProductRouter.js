@@ -33,6 +33,7 @@ productsRouter.post("/", async (req, res) => {
     try {
             const result = await productManager.addProduct(body);
             res.send(result);
+            console.log("producto agregado")
         } catch (e) {
             console.log(e);
             res.status(500).send({ error: true });

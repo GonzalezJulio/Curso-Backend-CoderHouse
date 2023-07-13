@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 
-
 export default class ProductManager {
+    
 
     constructor (path) {
         this.path = `./db/${path}.json`;
@@ -30,9 +30,9 @@ export default class ProductManager {
             title,
             description,
             price,
-            thumbnail = null,
+            thumbnail,
             code,
-            stock = 50,
+            stock,
         } = productAdd;
         try {
             const products = await this.getProducts();
@@ -60,7 +60,7 @@ export default class ProductManager {
 
     async getProductById(idProduct) {
         const products = await this.getProducts();
-        const product = products.find((product) => product.id == idProduct);
+        const product = products.find(product => product.id == idProduct);
         return product;
     } 
     

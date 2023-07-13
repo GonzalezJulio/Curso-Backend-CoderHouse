@@ -1,82 +1,84 @@
-import fs from 'fs';
+import fs from "fs/promises"
 
-class CartManager{
-    constructor(path){
+export default class CartManager {
+    #id = 1;
+
+    constructor(path) {
+        this.carts=[];
         this.path = path;
-    }
+        this.loadData();
+    }      
 
-    createCart(){
-        const cartList = this.getData();
-        const cart = {products: []}
-
-        // Asignarle un ID
-        if(cartList.length == 0){
-            cart.id = 1
-        }else{
-            let lastItemID = cartList[cartList.length - 1].id
-            cart.id = lastItemID + 1
-        }
-
-        cartList.push(cart);
-        fs.writeFileSync(this.path,JSON.stringify(cartList, null, 2))
-        return cart;
-    }
-
-    getCartByID(cid){
-        // conseguir un carrito por su ID
-        const cartList = this.getData();
-
-        let searchCart = cartList.find(cart => cart.id == cid);
-        if(searchCart){
-            return searchCart;
-        }else{
-            return {err: 'A cart with that ID does not exist.'};
-        }
-    }
-
-    addProductToCart(cid, pid){
-        // Agregar un producto al carrito
-        const cartList = this.getData();
-
-        let indexCart = cartList.findIndex(cart => cart.id == cid);
-        if(indexCart == -1){
-            return {err: 'A cart with that ID does not exist.'};
-        }
-
-        // Ver si el producto ya se encuentra en el carrito
-        let productIndex = cartList[indexCart].products.findIndex(prod => prod.id == pid )
-        if(productIndex == -1){
-            const toAdd = {id: pid, quantity: 1}
-
-            cartList[indexCart].products.push(toAdd)
-            fs.writeFileSync(this.path,JSON.stringify(cartList, null, 2))
-
-            return {message: 'added to cart', cart: cartList[indexCart].products};
-        
-        }else{
-            cartList[indexCart].products[productIndex].quantity += 1;
-
-            fs.writeFileSync(this.path,JSON.stringify(cartList, null, 2))
-
-            return {message: 'added to cart', cart: cartList[indexCart].products}
-        }
-    }
-    
-    getData(){
-        // Extrae data del archivo. Si no existe aun, devuelve un array vacio.
-        let data = []
+    loadData = async()=>{
         try{
-            const productos = JSON.parse(fs.readFileSync(this.path, 'utf-8'))
-            productos.forEach(element => {
-                data.push(element)
-            });
+            const file=await fs.readFile(this.path, "utf-8");
+            const carts= JSON.parse(file);
+            this.carts=carts;
 
         }catch{
-            console.log('The file was empty or did not exist.')
+            console.log(`El archivo ${this.path} no existe, creando...`)
+            await fs.writeFile(this.path, "[]");
+            return [];
         }
-        return data;
+    };
+
+    cartList = async(cid)=> {
+        try {
+        const cart = this.carts.find( cart => cart.id == cid);
+        return cart.products;
+        } catch (error) {
+        console.log(
+            `Error al buscar su carrito: ${error}`
+        );
+        }
     }
 
-}
+    createCart= async()=>{
+        try {
+        if (this.carts.length === 0) {
+            this.#id = 1
+        } else {
+            this.#id = this.carts[this.carts.length-1].id + 1
+        }
+        this.carts.push({
+            id: this.#id,
+            products: [],
+        });
 
-export default CartManager;
+        await fs.writeFile(this.path, JSON.stringify(this.carts,null,2));
+        return this.carts;
+        } 
+        catch (error) {
+        console.log(`Hubo un error al guardar su nuevo carrito: ${error}`);
+        }
+    }
+
+
+    addToCart=async(cid,prod)=>{
+        try {
+            const cart = this.carts.find((i) => i.id == cid);
+            const index = this.carts.indexOf(cart);
+            if (cart !== undefined){
+                const locate = this.carts[index].products.find(i => i.id == prod.id);
+                const idx = this.carts[index].products.indexOf(locate);
+                if (locate){
+                    this.carts[index].products[idx].qty++;
+                    await fs.writeFile(this.path,JSON.stringify(this.carts,null,2));
+                    return this.carts
+                }else{
+                    prod.qty = 1;
+                    this.carts[index].products.push(prod)
+                    await fs.writeFile(this.path,JSON.stringify(this.carts,null,2));
+                    return this.carts
+                }
+            }else{
+                return null
+            }
+        } catch (error) {
+            console.log('Hubo un error al añadir el articulo al carrito',error);
+        }
+    }
+
+
+
+}
