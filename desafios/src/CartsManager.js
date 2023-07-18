@@ -86,15 +86,4 @@ export default class CartManager {
             console.log(e)
         }
       }
-    
-    
-    
-    
-    
-    }
-
-      
-
-    
-
-    
+}
