@@ -3,7 +3,7 @@
       <div class="col-12 p-2">
             <h1>Lista de productos</h1>
             <table class="table ">
-                <thead >
+                <thead class="table-dark">
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Title</th>
@@ -11,15 +11,15 @@
                         <th scope="col">Code</th>
                         <th scope="col">Price</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">Category</th>
+                        
                     </tr>
                 </thead>
                 <tbody id="listaProductos">
                 </tbody>
             </table>
         </div>
-        <div class="col-6 p-1">
-            <h2>Agregar producto</h2>
+        <div class="color card border-danger mb-3" style="max-width: 140rem;">
+           <div class="card-header">Agregar Product</div>
             <form class="py-2" id="addProduct">
                 <div class="mb-3">
                     <div class="row">
@@ -58,14 +58,6 @@
                         <label for="stock" class="col-3 col-form-label">Stock *</label>
                         <div class="col-9">
                             <input required type="number" class="form-control" id="stock" name="stock">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <label for="category" class="col-3 col-form-label">Category *</label>
-                        <div class="col-9">
-                            <input required type="text" class="form-control" id="category" name="category">
                         </div>
                     </div>
                 </div>
