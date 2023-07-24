@@ -56,10 +56,10 @@ addProductForm.addEventListener('submit', (e) => {
 
 deleteProductForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const pid = document.getElementById('pid').value;
+    const pid = document.getElementById('idProduct').value;
 
     socket.emit('delete_prod', {pid})
 
-    document.getElementById('pid').value = '';
+    document.getElementById('idProduct').value = '';
     return false;
 });
