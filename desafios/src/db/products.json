@@ -1,1 +1,11 @@
-[{"id":1,"title":"Vaso Unicornio","description":"Vaso de Plastico","price":"3400","thumbnail":"","code":"Vaso","stock":"20"}]
+[
+  {
+    "id": 1,
+    "title": "Vaso Unicornio ",
+    "description": "Vaso de Plastico, con tapa de unicornio, 450 ml.",
+    "price": "4500",
+    "thumbnail": "",
+    "code": "m",
+    "stock": "50"
+  }
+]
