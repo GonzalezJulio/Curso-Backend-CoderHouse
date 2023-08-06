@@ -1,55 +1,33 @@
 import fs from "fs/promises"
-
+import productsModel from "./schemas/product.model.js";
+import mongoose from "mongoose";
 export default class ProductManager {
     
 
-    constructor (path) {
-        this.path = `./db/${path}.json`;
-        this.products = [];
+    constructor () {}
 
-    }
-
-    async #saveProduct(products) {
+    /* async #saveProduct(products) {
         await fs.writeFile(this.path, JSON.stringify(products))
         this.products = products;
         return products
-    }
+    } */
 
     getProducts = async () => {
         try {
-            const file = await fs.readFile(this.path, "utf-8")
-            const products = JSON.parse(file)
+            
+            const products = await productsModel.find()
             return products;
         } catch(e) {
-            await this.#saveProduct([])
+            return [];
         }
     }
 
     addProduct = async (productAdd) => {
-        const {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-        } = productAdd;
+       
         try {
-            const products = await this.getProducts();
-            const productsAdd = {
-                id: products.length == 0 ? 1:products[products.length - 1].id + 1,
-                title,
-                description,
-                price,
-                thumbnail,
-                code,
-                stock,
-            }
-
-            this.products = products
-            products.push(productsAdd)
-            await this.#saveProduct(products)
-            return productsAdd;
+            productsModel.create(productAdd)
+            const addProduct = await productsModel.insertMany([productAdd])
+            return addProduct;
 
         }catch(e){
             console.log(e)
@@ -59,27 +37,26 @@ export default class ProductManager {
     }
 
     async getProductById(idProduct) {
-        const products = await this.getProducts();
-        const product = products.find(product => product.id == idProduct);
-        return product;
+        const product = await productsModel.findOne({ idProduct });
+        if(!product) return "Producto no encontrado"
     } 
     
 
-    async updateProduct(idProduct, product) {
+    /* async updateProduct(idProduct, product) {
         const products = await this.getProducts();
         const productIndex = products.findIndex((product) => product.id == idProduct);
         if (productIndex == -1) return false;
 
         products[productIndex] = {...products[productIndex], ...product}
         await this.#saveProduct(products)
-    } 
+    }  */
     
     
-    async deleteProductById(idProduct) {
+    /* async deleteProductById(idProduct) {
         const products = await this.getProducts();
         const newProducts = products.filter(product => product.id != idProduct);
         await this.#saveProduct(newProducts); 
-    }
+    } */
 
 
 }

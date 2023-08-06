@@ -1,21 +1,21 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import productsModel from './schemas/product.schemas.js';
+import productsModel from './schemas/product.model.js';
+import ProductRouter from './router/ProductRouter.js'
+
 const app = express();
 
-const connect = mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-connect.then(() => console.log('Contecado mongoose'))
-productsModel.insertMany
+const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
+
 
 app.use(express.json())
-
-app.get("/api/products", async (req, res) => {
+app.use("/api/products", ProductRouter)
+/* 
     // GET Llamado de todo los products
-app.get("/", async (req, res) => {
+app.get("/api/products", async (req, res) => {
     
     try {
-        const products = await productManager.getProducts();
-      
+        const products = await productsModel.find();
         res.send(products)
     } catch (e) {
         res.status(500).send({ error: true });
@@ -25,7 +25,7 @@ app.get("/", async (req, res) => {
 app.get("/api/products/:idProduct", async (req, res) => {
     try{
         const { idProduct } = req.params;
-        
+        const product = await productsModel.find(idProduct)
         res.send(product)
     } catch (e) {
         res.status(500).send({ error: true });
@@ -34,13 +34,13 @@ app.get("/api/products/:idProduct", async (req, res) => {
 
 // POST Agregar products
 
-app.post("/api/", async (req, res) => {
-    const body = req.body;
+app.post("/api/products", async (req, res) => {
+    
  
     try {
-          
-            productsModel.insertMany([body])
-            res.send({ msg: "Producto Agregado" });
+        const body = req.body;
+            const prod = await productsModel.insertMany([body])
+            res.send({ msg: "Producto Agregado", prod });
     
         } catch (e) {
             console.log(e);
@@ -55,7 +55,7 @@ app.put("/api/products/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
         const product = req.body;
-        
+        const prod = await productsModel.insertMany()  // revisar video para agregar el metodo que corresponde
         res.send({ update: true });
     }catch (e) {
         res.status(500).send({ error: true });
@@ -67,16 +67,16 @@ app.put("/api/products/:idProduct", async (req, res) => {
 app.delete("/api/products/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
-        
-        res.send({ deleted: true });
+        const prod = await productsModel.insertMany()
+        res.send({ deleted: true, prod });
     } catch (e) {
         res.status(500).send({ error: true });
     }
 })
 
+ */
 
 
 
-}); 
 
 app.listen(8080,()=>console.log("connectados en 8080"));

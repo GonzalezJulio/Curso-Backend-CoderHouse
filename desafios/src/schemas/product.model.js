@@ -5,17 +5,21 @@ import mongoose from "mongoose";
 const productsSchema = new mongoose.Schema({
     title: {
         type: String,
-        requider: true,
+        
     },
     description: {
         type: String,
         requider: true,
     },
     price: {
-        type: String,
+        type: Number,
         requider: true,
     },
     thumbnail: {
+        type: String,
+        requider: true,
+    },
+    category: {
         type: String,
         requider: true,
     },
@@ -24,10 +28,10 @@ const productsSchema = new mongoose.Schema({
         requider: true,
     },
     stock: {
-        type: String,
+        type: Number,
         requider: true,
     },
 });
 
-const productsModel = mongoose.model('products', productsSchema)
+const productsModel = mongoose.model( "products", productsSchema)
 export default productsModel
