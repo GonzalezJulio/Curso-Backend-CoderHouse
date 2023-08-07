@@ -4,7 +4,7 @@ import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
 import viewsProductRouter from "./router/viewsProductRouter.js";
 import cartRouter from "./router/CartRouter.js";
-import ProductManager from "./ProductManager.js";
+import ProductManager from "./dao/ProductManager.js";
 const productManager = new ProductManager("products")
 import { Server as SocketServer } from "socket.io";
 import {Server as HTTPServer} from "http";
@@ -12,6 +12,8 @@ import __dirname from "./dirname.js";
 
 const app = express();
 
+const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
+console.log("Conectados en mongoose")
 
 const httpServer = HTTPServer(app)
 

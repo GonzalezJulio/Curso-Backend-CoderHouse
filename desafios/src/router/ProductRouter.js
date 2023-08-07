@@ -1,31 +1,26 @@
 import { Router } from "express";
-import ProductManager from "../ProductManager.js";
-import { upload } from "../config/multer.js";
-import productsModel from "../schemas/product.model.js";
-
+import ProductManager from "../dao/ProductManager.js";
 
 const productManager = new ProductManager("products");
 const productsRouter = Router();
 
 
 
-// GET Llamado de todo los products
+     // GET Llamado de todo los products
 productsRouter.get("/api/", async (req, res) => {
-    const { title } = req.query;
-    res.render("index", {nombre: title})
+    
     try {
-        const products = await productsModel.find(title);
-      
+        const products = await productManager.getProducts();
         res.send(products)
     } catch (e) {
         res.status(500).send({ error: true });
     }
 });
 // GET llamado por id
-productsRouter.get("/api/:idProduct", async (req, res) => {
+productsRouter.get("/api/products/:idProduct", async (req, res) => {
     try{
         const { idProduct } = req.params;
-        const product = await productsModel.find(idProduct);
+        const product = await productManager.getProductById(idProduct)
         res.send(product)
     } catch (e) {
         res.status(500).send({ error: true });
@@ -34,16 +29,14 @@ productsRouter.get("/api/:idProduct", async (req, res) => {
 
 // POST Agregar products
 
-productsRouter.post("/api/products", upload.single('thumbnail'), async (req, res) => {
-    const body = req.body;
+productsRouter.post("/api/products", async (req, res) => {
+    
  
     try {
-            if(req.file.filemane) return res.send("Archivo no se ha encontrado!")
-            body.thumbnail = req.file.filemane;
-            const result = await productsModel.insertMany(body);
-           
-            res.send(result);
-            console.log("producto agregado")
+        const body = req.body;
+            const prod = await productManager.addProduct(body)
+            res.send({ msg: "Producto Agregado", prod });
+    
         } catch (e) {
             console.log(e);
             res.status(500).send({ error: true });
@@ -53,11 +46,11 @@ productsRouter.post("/api/products", upload.single('thumbnail'), async (req, res
 
 // PUT modificar archivos
 
-/* productsRouter.put("/:idProduct", async (req, res) => {
+productsRouter.put("/api/products/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
         const product = req.body;
-        const result = await productManager.updateProduct(idProduct, product);
+        const prod = await productManager.updateProduct(idProduct)  // revisar video para agregar el metodo que corresponde
         res.send({ update: true });
     }catch (e) {
         res.status(500).send({ error: true });
@@ -66,14 +59,16 @@ productsRouter.post("/api/products", upload.single('thumbnail'), async (req, res
 
 
 // Delete para eliminar objetos
-productsRouter.delete("/:idProduct", async (req, res) => {
+productsRouter.delete("/api/products/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
-        await productManager.deleteProductById(idProduct);
-        res.send({ deleted: true });
+        const prod = await productManager.deleteProductById(idProduct)
+        res.send({ deleted: true, prod });
     } catch (e) {
         res.status(500).send({ error: true });
     }
-}) */
+})
+
+ 
 
 export default productsRouter;
