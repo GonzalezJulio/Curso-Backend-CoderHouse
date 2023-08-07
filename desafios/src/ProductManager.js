@@ -1,9 +1,9 @@
 import fs from "fs/promises"
 import productsModel from "./schemas/product.model.js";
 import mongoose from "mongoose";
-export default class ProductManager {
-    
 
+mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
+export default class ProductManager {
     constructor () {}
 
     /* async #saveProduct(products) {

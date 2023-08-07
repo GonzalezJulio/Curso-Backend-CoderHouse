@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from 'mongoose';
 import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
 import viewsProductRouter from "./router/viewsProductRouter.js";

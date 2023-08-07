@@ -6,11 +6,9 @@ import ProductRouter from './router/ProductRouter.js'
 const app = express();
 
 const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-
-
+console.log("Conectados en mongoose")
 app.use(express.json())
-app.use("/api/products", ProductRouter)
-/* 
+/* app.use("/api/products", ProductRouter) */
     // GET Llamado de todo los products
 app.get("/api/products", async (req, res) => {
     
@@ -34,7 +32,7 @@ app.get("/api/products/:idProduct", async (req, res) => {
 
 // POST Agregar products
 
-app.post("/api/products", async (req, res) => {
+app.post("/api/product", async (req, res) => {
     
  
     try {
@@ -74,7 +72,7 @@ app.delete("/api/products/:idProduct", async (req, res) => {
     }
 })
 
- */
+
 
 
 
