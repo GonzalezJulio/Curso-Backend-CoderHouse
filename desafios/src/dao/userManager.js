@@ -1,53 +1,56 @@
 import fs from "fs"
 import crypto from "crypto"
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import userModel from "../schemas/user.model.js"
+import mongoose from "mongoose";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 
 export default class userManager {
 
-    constructor (file) {
-        this.file = `./db/${file}.json`;
-    }
+    constructor () {}
     async getUser() {
         try {
-          const data = await fs.promises.readFile(this.file, "utf-8");
-          const users = JSON.parse(data);
+          
+          const users = await userModel.find();
           return users;
-        } catch (e) {
-          await fs.promises.writeFile(this.file, JSON.stringify([]));
+        } catch (e) { 
           return [];
         }
       }
 
-    async updateUser() {};
+    async updateUser(username, profile_picture) {
+      const user = await userModel.findOne({username})
+      
+    };
 
     // usuario = {name, lastname, user, password } 
-    async createUser(user){
-        const users = await this.getUser();
+    async createUser(users){
+        
         user.salt = crypto.randomBytes(128).toString('base64')
         user.password = crypto
         .createHmac("sha256", user.salt)
         .update(user.password)
         .digest("hex")
-
-        users.push(user)
-        try {
-            await fs.promises.writeFile(this.file, JSON.stringify(users))
-        } catch(e) {
-            return "No se ha podido escrbir el archivo!"
-        }
+        userModel.create(user)
+        const user = await userModel.insertMany([users])
+        return user;
 
     }
 
     async validateUser(username, password) {
-        const users = await this.getUser();
-        const user = users.find((user) => user.name == username);
-        if (!user) return "Error, usuario no exite!";
-        const loginHash = crypto
-        .createHmac("sha256", user.salt)
-        .update(password)
-        .digest("hex");
+      
+      const user = await userModel.findOne({ username })
+      if (!user) return "Error, usuario no exite!";
+      
+      const loginHash = crypto
+      .createHmac("sha256", user.salt)
+      .update(password)
+      .digest("hex");
 
-        return loginHash == user.password
-        ? "Usuario Loggeado!"
-        : "usuario/contrase;a incorrecta";
-}
+      return loginHash == user.password
+      ? "Usuario Loggeado!"
+      : "usuario/contrase;a incorrecta";
+    }
 }

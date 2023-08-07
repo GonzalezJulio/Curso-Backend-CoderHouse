@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from 'mongoose';
 import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
+import userRouter from "./router/userRouter.js"
 import viewsProductRouter from "./router/viewsProductRouter.js";
 import cartRouter from "./router/CartRouter.js";
 import ProductManager from "./dao/ProductManager.js";
@@ -31,6 +32,7 @@ app.use("/assets",express.static( __dirname + "/public"));
 app.use(express.static( __dirname + "/public"))
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
+app.use('/api/user', userRouter)
 
 
 
