@@ -9,14 +9,18 @@ const userSchema = new mongoose.Schema({
         type: String, 
         required: true,
     }, 
-    user: {
+    username: {
         type: String,
         required: true, 
     }, 
     password: {
         type: String,
-        required: false, 
-    }
+        required: true, 
+    },
+    salt: {
+        type: String,
+        required: true,
+    },
 });
 
 const userModel = mongoose.model("user", userSchema)

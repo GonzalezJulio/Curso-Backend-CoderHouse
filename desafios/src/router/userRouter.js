@@ -21,7 +21,7 @@ userRouter.post("/api/usercreate", async (req, res) => {
 userRouter.get("/api/usercreate/:id", async (req, res) => {
     const { id } = req.params;
     const { ocultarPassword } = req.query;
-    const user = await manager.getUser();
+    const user = await manager.getUser(id);
     res.send(user.find((user) => user.id == id));
 });
 

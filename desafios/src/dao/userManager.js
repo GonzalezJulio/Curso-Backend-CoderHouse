@@ -7,6 +7,9 @@ import mongoose from "mongoose";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
+mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
+console.log('Conectado mongoose userManager')
+
 export default class userManager {
 
     constructor () {}
@@ -26,18 +29,20 @@ export default class userManager {
     };
 
     // usuario = {name, lastname, user, password } 
-    /* async createUser(users){
-        
-        user.salt = crypto.randomBytes(128).toString('base64')
-        user.password = crypto
-        .createHmac("sha256", user.salt)
-        .update(user.password)
-        .digest("hex")
-        userModel.create(user)
-        const user = await userModel.insertMany([users])
-        return user;
+  
+    async createUser(users) {
+      users.salt = crypto.randomBytes(128).toString("base64");
+      users.password = crypto
+        .createHmac("sha256", users.salt)
+        .update(users.password)
+        .digest("hex");
+        /* userModel.create(users)
+        console.log(users) */
+      const user = await UserModel.insertMany([users]);
+      return user;
 
-    } */
+    
+    }
 
     async validateUser(username, password) {
       
@@ -55,7 +60,7 @@ export default class userManager {
     }
 
     async deleteUser(username) {
-      const users = await productsModel.findOne({ username })
+      const users = await userModel.indOne({ username })
         return users;
     }
 }

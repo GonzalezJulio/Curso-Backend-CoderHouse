@@ -36,7 +36,7 @@ app.use(express.static( __dirname + "/public"))
 app.use('/api/users', userRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
-app.use('/api/user', userRouter)
+
 
 
 
@@ -61,33 +61,29 @@ io.on('connection', async (socket) => {
       socket.emit('productos',await productManager.getProducts())
   })
 
-  
-})
-
-// Socket Usuarios
-
-io.on('connection', async (socket) => {
-  
-  
-  socket.emit('connected', (data) => {
-  console.log('connected with server')
-})
-  socket.emit('usuarios', await manager.createUser())
-
   socket.on('new_user', async (data) => {
     manager.createUser(data)
       
       socket.emit('usuarios', await manager.createUser())     
   })
 
-  socket.on('delete_prod',async (data) => {
+  socket.on('delete_username',async (data) => {
     manager.deleteUser(data.usna)
 
-      socket.emit('productos',await manager.createUser())
+      socket.emit('usuarios',await manager.createUser())
   })
 
   
 })
+
+// Socket Usuarios
+
+
+  
+
+ 
+
+  
 
 
 httpServer.listen(8080,()=>console.log("connectados en 8080"));
