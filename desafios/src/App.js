@@ -62,24 +62,14 @@ io.on('connection', async (socket) => {
   })
 
   socket.on('new_user', async (data) => {
-    manager.createUser(data)
+    await manager.createUser(data)
   })
 
   socket.on('delete_username',async (data) => {
-    manager.deleteUser(data.usna)
+    await manager.deleteUser(data.usna)
 })
 
   
 })
-
-// Socket Usuarios
-
-
-  
-
- 
-
-  
-
 
 httpServer.listen(8080,()=>console.log("connectados en 8080"));

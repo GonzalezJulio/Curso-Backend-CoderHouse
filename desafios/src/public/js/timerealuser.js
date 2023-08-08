@@ -11,7 +11,7 @@ socket.on("connected", (data) => {
         usuarios = ususarios + `<tr>
         <td>${usuario.name}</td>
         <td>${usuario.lastname}</td>
-        <td>${usuario.user}</td>
+        <td>${usuario.username}</td>
         <td>${usuario.password}</td>
         </tr>
         `
@@ -25,14 +25,14 @@ createUserForm.addEventListener('submit', (e) => {
 
     const name = document.getElementById('name').value;
     const lastname = document.getElementById('lastname').value;
-    const user = document.getElementById('user').value;
+    const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    socket.emit('new_user', {name, lastname, user, password})
+    socket.emit('new_user', {name, lastname, username, password})
 
     document.getElementById('name').value = '';
     document.getElementById('lastname').value = '';
-    document.getElementById('user').value = '';
+    document.getElementById('username').value = '';
     document.getElementById('password').value = '';
 
     return false;

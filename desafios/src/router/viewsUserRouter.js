@@ -4,7 +4,7 @@ const manager = new userManager("user");
 const viewsUserRouter = Router();
 
 viewsUserRouter.get("/", async (req, res) => {
-    const user = await manager.createUser();
+    const username = await manager.createUser();
     res.render("indexUser", { username });
 });
 

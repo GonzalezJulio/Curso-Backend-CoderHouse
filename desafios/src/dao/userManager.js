@@ -38,7 +38,7 @@ export default class userManager {
         .digest("hex");
         /* userModel.create(users)
         console.log(users) */
-      const user = await UserModel.insertMany([users]);
+      const user = await userModel.insertMany([users]);
       return user;
 
     
