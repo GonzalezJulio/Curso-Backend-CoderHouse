@@ -3,9 +3,12 @@ import mongoose from 'mongoose';
 import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
 import userRouter from "./router/userRouter.js"
+import viewsUserRouter from "./router/viewsUserRouter.js"
 import viewsProductRouter from "./router/viewsProductRouter.js";
 import cartRouter from "./router/CartRouter.js";
+import userManager from "./dao/userManager.js";
 import ProductManager from "./dao/ProductManager.js";
+const manager = new userManager("user")
 const productManager = new ProductManager("products")
 import { Server as SocketServer } from "socket.io";
 import {Server as HTTPServer} from "http";
@@ -24,19 +27,20 @@ const io =  new SocketServer(httpServer)
 app.engine("handlebars",handlebars.engine())
 app.set("views",__dirname + "/views")
 app.set("view engine","handlebars")
-
+app.use('/', viewsUserRouter)
 app.use('/', viewsProductRouter)
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use("/assets",express.static( __dirname + "/public"));
 app.use(express.static( __dirname + "/public"))
+app.use('/api/users', userRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
 app.use('/api/user', userRouter)
 
 
 
-
+// Socket Product
 io.on('connection', async (socket) => {
   
   
@@ -60,6 +64,30 @@ io.on('connection', async (socket) => {
   
 })
 
+// Socket Usuarios
+
+io.on('connection', async (socket) => {
+  
+  
+  socket.emit('connected', (data) => {
+  console.log('connected with server')
+})
+  socket.emit('usuarios', await manager.createUser())
+
+  socket.on('new_user', async (data) => {
+    manager.createUser(data)
+      
+      socket.emit('usuarios', await manager.createUser())     
+  })
+
+  socket.on('delete_prod',async (data) => {
+    manager.deleteUser(data.usna)
+
+      socket.emit('productos',await manager.createUser())
+  })
+
+  
+})
 
 
 httpServer.listen(8080,()=>console.log("connectados en 8080"));

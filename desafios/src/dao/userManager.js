@@ -26,7 +26,7 @@ export default class userManager {
     };
 
     // usuario = {name, lastname, user, password } 
-    async createUser(users){
+    /* async createUser(users){
         
         user.salt = crypto.randomBytes(128).toString('base64')
         user.password = crypto
@@ -37,7 +37,7 @@ export default class userManager {
         const user = await userModel.insertMany([users])
         return user;
 
-    }
+    } */
 
     async validateUser(username, password) {
       
@@ -52,5 +52,10 @@ export default class userManager {
       return loginHash == user.password
       ? "Usuario Loggeado!"
       : "usuario/contrase;a incorrecta";
+    }
+
+    async deleteUser(username) {
+      const users = await productsModel.findOne({ username })
+        return users;
     }
 }

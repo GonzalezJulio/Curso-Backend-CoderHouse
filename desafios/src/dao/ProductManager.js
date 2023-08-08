@@ -30,19 +30,19 @@ export default class ProductManager {
     } 
     
 
-    async updateProduct(idProduct, product) {
+    /* async updateProduct(idProduct, product) {
         const products = await this.getProducts();
         const productIndex = products.findIndex((product) => product.id == idProduct);
         if (productIndex == -1) return false;
 
         products[productIndex] = {...products[productIndex], ...product}
         
-    }  
+    }  */ 
     
     
      async deleteProductById(idProduct) {
-        const products = await this.getProducts();
-        const newProducts = products.filter(product => product.id != idProduct);
+        const product = await productsModel.findOne({ idProduct })
+        return product;
         
     }
 
