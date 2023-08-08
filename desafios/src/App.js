@@ -63,15 +63,11 @@ io.on('connection', async (socket) => {
 
   socket.on('new_user', async (data) => {
     manager.createUser(data)
-      
-      socket.emit('usuarios', await manager.createUser())     
   })
 
   socket.on('delete_username',async (data) => {
     manager.deleteUser(data.usna)
-
-      socket.emit('usuarios',await manager.createUser())
-  })
+})
 
   
 })
