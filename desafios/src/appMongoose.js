@@ -1,4 +1,4 @@
-import express from 'express';
+/* import express from 'express';
 import mongoose from 'mongoose';
 import productsRouter from './router/ProductRouter.js'
 
@@ -10,4 +10,4 @@ app.use(express.json())
 
 app.use('/api/products', productsRouter)
 
-app.listen(8080,()=>console.log("connectados en 8080"));
+app.listen(8080,()=>console.log("connectados en 8080")); */

@@ -2,7 +2,7 @@ import fs from "fs"
 import crypto from "crypto"
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import userModel from "../schemas/user.model.js"
+import userModel from "../models/user.model.js"
 import mongoose from "mongoose";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

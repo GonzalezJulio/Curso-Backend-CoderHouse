@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
 import userRouter from "./router/userRouter.js"
+import viewsMessagesRouter from "./router/viewsChat.js";
 import viewsUserRouter from "./router/viewsUserRouter.js"
 import viewsProductRouter from "./router/viewsProductRouter.js";
 import cartRouter from "./router/CartRouter.js";
-import userManager from "./dao/userManager.js";
-import ProductManager from "./dao/ProductManager.js";
+import MessageManager from "./dao/mongodb/MessagesManager.js";
+import userManager from "./dao/mongodb/userManager.js";
+import ProductManager from "./dao/mongodb/ProductManager.js";
 const manager = new userManager("user")
 const productManager = new ProductManager("products")
 import { Server as SocketServer } from "socket.io";
@@ -27,6 +29,7 @@ const io =  new SocketServer(httpServer)
 app.engine("handlebars",handlebars.engine())
 app.set("views",__dirname + "/views")
 app.set("view engine","handlebars")
+app.use('/', viewsMessagesRouter)
 app.use('/', viewsUserRouter)
 app.use('/', viewsProductRouter)
 app.use(express.urlencoded({extended:true}));
