@@ -1,72 +1,93 @@
-<section style="background-color: #eee;">
-  <div class="container py-5">
-
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-8 col-lg-6 col-xl-4">
-
-        <div class="card" id="chat1" style="border-radius: 15px;">
-          <div
-            class="card-header d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0"
-            style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-            <i class="fas fa-angle-left"></i>
-            <p class="mb-0 fw-bold">Live chat</p>
-            <i class="fas fa-times"></i>
-          </div>
-          <div class="card-body">
-
-            <div class="d-flex flex-row justify-content-start mb-4">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                alt="avatar 1" style="width: 45px; height: 100%;">
-              <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
-                <p class="small mb-0">Hello and thank you for visiting MDBootstrap. Please click the video
-                  below.</p>
-              </div>
-            </div>
-
-            <div class="d-flex flex-row justify-content-end mb-4">
-              <div class="p-3 me-3 border" style="border-radius: 15px; background-color: #fbfbfb;">
-                <p class="small mb-0">Thank you, I really like your product.</p>
-              </div>
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-                alt="avatar 1" style="width: 45px; height: 100%;">
-            </div>
-
-            <div class="d-flex flex-row justify-content-start mb-4">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                alt="avatar 1" style="width: 45px; height: 100%;">
-              <div class="ms-3" style="border-radius: 15px;">
-                <div class="bg-image">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/screenshot1.webp"
-                    style="border-radius: 15px;" alt="video">
-                  <a href="#!">
-                    <div class="mask"></div>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex flex-row justify-content-start mb-4">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                alt="avatar 1" style="width: 45px; height: 100%;">
-              <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237,.2);">
-                <p class="small mb-0">...</p>
-              </div>
-            </div>
-
-            <div class="form-outline">
-              <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
-              <label class="form-label" for="textAreaExample">Type your message</label>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
+<script src="https://cdn.tailwindcss.com"></script>
+    <script src="./js/chat.js"></script>
+<div class="flex justify-center items-center h-screen" id="joinChat">
+    <div class="grid gap-9">
+        <h1 class="text-white text-5xl">Join room</h1>
+        <input id="username" type="text" placeholder="Your name"
+            class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-100 placeholder-gray-300 pl-12 bg-zinc-700 rounded-md py-3" />
+        <button id="joinBtn" type="button"
+            class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-black bg-brand-color hover:bg-blue-400 focus:outline-none">
+            <span class="font-bold">Join</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                class="h-6 w-6 ml-2 transform rotate-90">
+                <path
+                    d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
+                </path>
+            </svg>
+        </button>
     </div>
-
-  </div>
-</section>
-<script src='/socket.io/socket.io.js'></script>
-<script src='/js/chatreal.js'></script>
-
-</body>
+</div>
+<div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen hidden" id="chat">
+    <div class="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
+        <div class="relative flex items-center space-x-4">
+            <div class="relative"></div>
+            <div class="flex flex-col leading-tight">
+                <div class="text-2xl mt-1 flex items-center">
+                    <span class="chat-color mr-3">CHAT_NAME</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2"></div>
+    </div>
+    <div id="messages"
+        class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+        <div class="chat-message">
+            <div class="flex items-end">
+                <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+                    <span class="brand-color">USER_NAME</span>
+                    <div>
+                        <span
+                            class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">msge23e23e23e23
+                            e32 2e3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-message" id="messageLogs" >
+            <div class="flex items-end justify-end">
+                <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
+                    <div>
+                        <span
+                            class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white">msge23e23e23e23
+                            e32 2e3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-message" id="messageLogs">
+            <div class="flex items-end">
+                <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+                    <span class="brand-color">USER_NAME</span>
+                    <div>
+                        <span
+                            class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">msge23e23e23e23
+                            e32 2e3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
+        <div class="relative flex">
+            <input id= "message" type="text" placeholder="Write your message!"
+                class="w-full focus:outline-none focus:placeholder-gray-400 text-gray-100 placeholder-gray-300 pl-12 bg-zinc-700 rounded-md py-3" />
+            <div class="absolute right-0 items-center inset-y-0 hidden sm:flex">
+                <button id= "sendMsg chatBox"  type="button"
+                    class="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-black bg-brand-color hover:bg-blue-400 focus:outline-none">
+                    <span class="font-bold">Send</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        class="h-6 w-6 ml-2 transform rotate-90">
+                        <path
+                            d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <style>
+            body {
+        background-color: #1f1f24;
+    }
+    </style>
+</div>

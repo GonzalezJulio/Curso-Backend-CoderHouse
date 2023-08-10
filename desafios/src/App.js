@@ -12,10 +12,10 @@ import userManager from "./dao/mongodb/userManager.js";
 import ProductManager from "./dao/mongodb/ProductManager.js";
 const manager = new userManager("user")
 const productManager = new ProductManager("products")
+const messagesDb = new MessageManager("messages")
 import { Server as SocketServer } from "socket.io";
 import {Server as HTTPServer} from "http";
 import __dirname from "./dirname.js";
-
 const app = express();
 
 const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
@@ -25,6 +25,7 @@ const httpServer = HTTPServer(app)
 
 
 const io =  new SocketServer(httpServer)
+
 
 app.engine("handlebars",handlebars.engine())
 app.set("views",__dirname + "/views")
@@ -46,6 +47,7 @@ app.use('/api/carts', cartRouter)
 // Socket Product
 io.on('connection', async (socket) => {
   
+
   
   socket.emit('connected', (data) => {
   console.log('connected with server')
@@ -72,7 +74,24 @@ io.on('connection', async (socket) => {
     await manager.deleteUser(data.usna)
 })
 
+});
+io.on('connection', async (socket) => {
+  console.log('se conecto un cliente');
   
+  socket.emit("messageLogs")
+socket.on("message", async (data) => {
+  let user = data.user;
+  let message = data.message;
+  await messagesDb.addMessage(user, message)
+  const messages = await messagesDb.getMessages();
+  socket.emit("messageLogs", messages)
 })
+
+});
+
+
+
+
+
 
 httpServer.listen(8080,()=>console.log("connectados en 8080"));

@@ -1,35 +1,33 @@
 import messagesModel from "../models/messages.model.js";
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-console.log('Conectado mongoose Manager')
 
-export default class MessageManager {
-    constructor () {
 
+class messagesManagerDB {
+    constructor() {
+        this.messagesModel = messagesModel;
     }
-
     async addMessage(user, message) {
-        try{
-            const new_message = await messagesModel.create({
-                user: user._id,
+        try {
+            const messages = await this.messagesModel.create({
+                user: user,
                 message: message,
             });
-            return new_message;
-
-        } catch (e) {
-
-        }
-    }
-
-    async getMessage() {
-        try{
-            const messages = await messagesModel.find();
             return messages;
-
-        }catch (e) {
-
+        } catch (error) {
+            
         }
     }
-
+    async getMessages() {
+        try {
+            const messages = await this.messagesModel.find().lean();
+            return messages;
+        } catch (error) {
+            throw new Error("No se pudo traer mensajes");
+        }
+    }
 }
+export default messagesManagerDB;
+
+mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)

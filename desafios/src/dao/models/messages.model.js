@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+
 
 const messageSchema = new mongoose.Schema({
     user: {
@@ -7,8 +8,11 @@ const messageSchema = new mongoose.Schema({
     },
     message: {
         type: String,
-        requierd: true,
+        required: true,
     },
 });
+
+
 const messageModel = mongoose.model("messages", messageSchema)
+
 export default messageModel;

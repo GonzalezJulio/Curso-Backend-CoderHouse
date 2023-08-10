@@ -36,8 +36,8 @@ export default class userManager {
         .createHmac("sha256", users.salt)
         .update(users.password)
         .digest("hex");
-        /* userModel.create(users)
-        console.log(users) */
+        userModel.create(users)
+        console.log(users)
       const user = await userModel.insertMany([users]);
       return user;
 

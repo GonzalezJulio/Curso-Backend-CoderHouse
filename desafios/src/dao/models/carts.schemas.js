@@ -1,34 +1,22 @@
-/* import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// AGREGAR CON LOS DATOS DE CARTSPRODUCTS
-
-
-const productsSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        requider: true,
-    },
-    description: {
-        type: String,
-        requider: true,
-    },
-    price: {
-        type: String,
-        requider: true,
-    },
-    thumbnail: {
-        type: String,
-        requider: true,
-    },
-    code: {
-        type: String,
-        requider: true,
-    },
-    stock: {
-        type: String,
-        requider: true,
-    },
+const cartSchema = new mongoose.Schema({
+    products: [
+        {
+            product: {
+                type: String,
+                ref: "Product",
+                required: true,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                default: 1,
+            },
+        },
+    ],
 });
 
-const productsModel = mongoose.model('products', productsSchema)
-export default productsModel */
+const cartModel = mongoose.model("carts", cartSchema)
+
+export default cartModel
