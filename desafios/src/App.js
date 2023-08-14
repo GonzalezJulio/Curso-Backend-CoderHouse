@@ -19,7 +19,7 @@ import __dirname from "./dirname.js";
 const app = express();
 
 const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-console.log("Conectados en mongoose")
+
 
 const httpServer = HTTPServer(app)
 
@@ -30,13 +30,13 @@ const io =  new SocketServer(httpServer)
 app.engine("handlebars",handlebars.engine())
 app.set("views",__dirname + "/views")
 app.set("view engine","handlebars")
-app.use('/', viewsMessagesRouter)
-app.use('/', viewsUserRouter)
-app.use('/', viewsProductRouter)
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use("/assets",express.static( __dirname + "/public"));
 app.use(express.static( __dirname + "/public"))
+app.use('/', viewsMessagesRouter)
+app.use('/', viewsUserRouter)
+app.use('/', viewsProductRouter)
 app.use('/api/users', userRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
@@ -46,9 +46,6 @@ app.use('/api/carts', cartRouter)
 
 // Socket Product
 io.on('connection', async (socket) => {
-  
-
-  
   socket.emit('connected', (data) => {
   console.log('connected with server')
 })
@@ -76,7 +73,7 @@ io.on('connection', async (socket) => {
 
 });
 io.on('connection', async (socket) => {
-  console.log('se conecto un cliente');
+  console.log('Conexion de Usuario');
   
   socket.emit("messageLogs")
 socket.on("message", async (data) => {
@@ -94,4 +91,4 @@ socket.on("message", async (data) => {
 
 
 
-httpServer.listen(8080,()=>console.log("connectados en 8080"));
+httpServer.listen(8080,()=>console.log("ATR"));

@@ -1,130 +1,158 @@
-<!DOCTYPE HTML>
-<html>
-   <head>
-       <script src="jquery.min.js"></script>
-       <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-       
-       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-       
-       <link rel="stylesheet" href="chat.css" >
-       
-      <script type="text/javascript">
-       var ws;
-          function IniciarConexion(){
-                ws= new WebSocket("ws://achex.ca:4010");
-                ws.onopen= function(){
-                    
-                     ws.send('{"setID":"MichatRoom","passwd":"12345"}');
-                }
-                ws.onmessage= function(Mensajes){
-                    var MensajesObtenidos=Mensajes.data;
-                    var objeto= jQuery.parseJSON(MensajesObtenidos);
-                    
-                    if((objeto.ContenidoM!=null)&&(objeto.NombreU!=null)){
-                        // copiar el item del chat y anexarlo al chat
-                        
-                        $( "#plantilla" ).clone().appendTo( ".chat" );
-                        $('.chat #plantilla').show(10);
-                        $('.chat #plantilla .Nombre').html(objeto.NombreU);
-                        $('.chat #plantilla .Mensaje').html(objeto.ContenidoM);
-             
-                         var formattedDate = new Date();
-                         var d = formattedDate.getUTCDate();
-                         var m =  formattedDate.getMonth();
-                         var y = formattedDate.getFullYear();
-                         var h= formattedDate.getHours();
-                         var min= formattedDate.getMinutes();
+import CartModel from "../models/cart.schema.js";
+import ProductModel from "../models/product.schema.js";
 
-                        Fecha=d+"/"+m+"/"+y+" "+h+":"+min;
+export default class CartManager{
+    async getCarts(){
+        try{
+            const cartModel = await CartModel.find()
+            
+            if(!cartModel.length) return { status: 404, response: "Carts not found."}
 
-                        $('.chat #plantilla .Tiempo').html(Fecha);
-                        $('.chat #plantilla').attr("id","");
-                        
-                        
-                    }
-                    
-                    
-                    
-                }
-                ws.onclose= function(){
-                alert("Conexión Cerrada");
-                }
-          }
-          IniciarConexion();
-          
-       </script>
-   </head>
-   <body>
-       
-       <div class="container">
-    <div class="row">
-        <div class="col-md-5">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <span class="glyphicon glyphicon-comment"></span> Chat
-                    <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
-                        <ul class="dropdown-menu slidedown">
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-refresh">
-                            </span>Refresh</a></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-ok-sign">
-                            </span>Available</a></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-remove">
-                            </span>Busy</a></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-time"></span>
-                                Away</a></li>
-                            <li class="divider"></li>
-                            <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-off"></span>
-                                Sign Out</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <ul class="chat"> </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="input-group">
-                        <input id="Mensaje" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                        <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btnEnviar" >
-                                Send</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+            const carts = cartModel.map(cart => ({ id: cart._id, products: cart.products }))
+            console.log(carts)
+            this.carts = carts;
+            return this.carts;
+        }catch(error){
+            console.log(`error: ${error}`)
+        }
+    }
 
-       <li style="display:none" id="plantilla" class="left clearfix">
-           <span class="chat-img pull-left">
-             <img src="http://placehold.it/50/55C1E7/fff&text=U"class="img-circle" />
-           </span>
-            <div class="chat-body clearfix">
-                    <div class="header">
-                      <strong class="primary-font Nombre" >Jack Sparrow</strong> 
-                        <small class="pull-right text-muted">
-                        <span class="glyphicon glyphicon-asterisk Tiempo"
-                        </span> 12/02/2015 </small>
-                    </div>
-                        <p class="Mensaje">
-                               Mensaje
-                        </p>
-                </div>
-        </li>
-       
-       
+    async getCartById(id) {
+        try {
+            const cartFound = await CartModel
+                .findById(id)
+                .populate("products.product")
+                .lean();
+            if (cartFound) {
+                return cartFound;
+            } else {
+                return "Not Found";
+            }
+            
+        } catch (error) {
+            throw new Error("Could not get cart");
+        }
+    }
+
+    async createCart(){
+        try{
+            const newCart= await CartModel.create({ products: []})
+        
+            return newCart;
+        }catch(error){
+            console.log(`error: ${error}`)
+        } 
+    }
+
+    async addProductToCart(cartId, productId){
+        try {
+            const producto= await ProductModel.findById(productId)
+            const cart = await CartModel.findById(cartId);
+            if (!cart) {
+                return { status: 404, response: "Carrito no encontrado." } 
+                
+            }else if(!producto){
+                return { status: 404, response: "Producto no encontrado." } 
+                
+            }
+
+            const prodIndex = cart.products.findIndex(
+                (prod) => prod.product == productId
+            );
+            console.log(prodIndex)
+            if (prodIndex !== -1) {
+                cart.products[prodIndex].quantity++;
+            } else {
+                const newProduct = { product: productId, quantity: 1 };
+                cart.products.push(newProduct);
+            }
+
+            await cart.save();
+            console.log(`se agrego ${productId} al carrito ${cartId}`)
+            return true;
+        } catch (error) {
+            throw new Error("No se logro agregar al carrito " + error);
+        }
+    }
     
-      <script>
-          var Nombre= prompt("Nombre:");
-          
-       $('#btnEnviar').click(function(){
-ws.send('{"to":"MichatRoom","NombreU":"'+Nombre+'","ContenidoM":"'+$('#Mensaje').val()+'"}');
-           $('#Mensaje').val("");
-       });
-       </script>
-   </body>
-</html>
+    async updateWholeCart(cid, prod) {
+        try {
+            const updatedCart = await CartModel.findOneAndUpdate(
+                { _id: cid },
+                { products: prod }
+            );
+            console.log("Carrito actualizado", updatedCart);
+            return updatedCart;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateQuantity(cid, pid, quantity) {
+        try {
+            const currentCart = await CartModel.findById(cid);
+            console.log(pid)
+            const indexProduct = currentCart.products.findIndex((item) => item.product._id == pid);
+            console.log(indexProduct)
+            if (indexProduct !== -1) {
+              currentCart.products[indexProduct].quantity = quantity;
+              console.log(`Cantidad actualizada exitosamente`)
+              
+            } else {
+              return 'Product not found on cart'
+            }
+            await currentCart.save()
+            return currentCart;
+            
+          } catch (error) {
+            console.error(`Error trying to update product quantity: ${error}`);
+          }
+        };
+
+    async deleteProdFromCart(cid, pid) {
+        try {
+            const cart = await CartModel.findById(cid);
+            const prodIndex = cart.products.findIndex(
+                (prod) => prod.product === pid
+            );
+            if (prodIndex !== -1) {
+                cart.products[prodIndex].quantity++;
+            } else {
+                const prodToDelete = { product: pid };
+                cart.products.splice(prodToDelete, 1);
+            }
+            await cart.save();
+            return cart;
+        } catch (error) {
+            throw new Error(
+                "It doesn´t exists a cart or product with such ID."
+            );
+        }
+    }
+    
+    async emptyCart(cid) {
+        try {
+            const cart = await CartModel.findById(cid);
+            cart.products = [];
+            await cart.save();
+            return cart;
+        } catch (err) {
+            console.error(err);
+            // console.log("no se pudo vaciar");
+        }
+    }
+
+    async deleteCart(id){
+        try{
+            const cartFound = await CartModel.find({ _id: id })
+
+            if(!cartFound) return { status: 404, response: "Carrito no encontrado." }
+
+            await CartModel.deleteOne({ _id: id })
+
+            return { status: 200, response: "Carito borrado." }
+        }catch(error){
+            console.log(`error: ${error}`)
+        }
+    }
+}

@@ -8,7 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-console.log('Conectado mongoose userManager')
+
 
 export default class userManager {
 
@@ -60,7 +60,7 @@ export default class userManager {
     }
 
     async deleteUser(username) {
-      const users = await userModel.indOne({ username })
+      const users = await userModel.deleteOne({ username })
         return users;
     }
 }

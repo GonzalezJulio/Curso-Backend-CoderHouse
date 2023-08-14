@@ -1,17 +1,18 @@
 import { Router } from "express"; 
 import CartManager from "../dao/mongodb/CartsManager.js";
 import ProductManager from "../dao/mongodb/ProductManager.js";
+const cartManager = new CartManager("../db/carts.json");
+const productManager = new ProductManager("../db/products.json")
 const cartRouter = Router();
-const cartManager = new CartManager("carts");
-const productManager = new ProductManager("products")
 
 
 // Crea Carrito
-cartRouter.post("/", async (req, res) => {
-    const body = req.body;
+cartRouter.post("/carts", async (req, res) => {
     try{
+        const body = req.body;
         const result = await cartManager.createCart(body);
         res.send(result);
+        
 
     } catch (e) {
         console.log(e);
@@ -20,7 +21,7 @@ cartRouter.post("/", async (req, res) => {
 })
 
 //  Devuelve Carrito
-cartRouter.get("/:idCart", async (req, res) => {
+cartRouter.get("/carts/:idCart", async (req, res) => {
     try{
         const { idCart } = req.params;
         const cart = await cartManager.getCartById(idCart);
@@ -35,7 +36,7 @@ cartRouter.post('/:idCart/products/:idProduct', async(req, res) => {
     const idCart = Number(req.params.idCart)
     const idProduct = Number(req.params.idProduct)
     try{
-        /* const { idCart, idProduct } = Number(req.params); */
+        
         const prod = await productManager.getProductById(idProduct);
         const productModificado = {
             id: prod.id

@@ -3,46 +3,76 @@ import productsModel from "../models/product.model.js";
 import mongoose from "mongoose";
 
 mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-console.log('Conectado mongoose Manager')
-
 
 export default class ProductManager {
-    constructor () {}
+    constructor (path) {
+        this.path = path
+    }
     
     getProducts = async () => {
         try {
             
             const products = await productsModel.find()
-            return products;
+            this.products = products;
+            return this.products;
         } catch(e) {
-            return [];
+         console.log(e)
         }
     }
 
-    async addProduct (productAdd) {
-        const addProduct = await productsModel.insertMany([productAdd])
-        return addProduct;
-    }
+    async addProduct (product) {
+        try {
+            const producto = await productsModel.insertMany([product])
+        console.log(producto)
+        return producto;
+    } catch(e){
+        console.log((e) => "Error al cargar Productos")
 
-    async getProductById(idProduct) {
-        const product = await productsModel.findOne({ idProduct });
-        if(!product) return "Producto no encontrado"
+    }
+    };
+    
+    async getProductById (productId) {
+        try {
+            const product = await productsModel.findById(productId)
+            if(!product) return { status: 404, response: "Producto no encontrado"} 
+            return {response: product}
+
+        } catch(error) {
+            console.log(`error: ${error}`)
+        }
+    }
+    
+
+    async updateProduct(id, obj) {
+        try{
+            const indexProduct = await productsModel.findById(id)
+            if(!indexProduct) return {response: "Producto no encontrado"}
+            const productData = index._doc
+            console.log(productData)
+            const updatedProduct = {
+                ...productData,
+                ...obj
+            }
+            await productsModel.updateOne({_id: id}. updateProduct)
+            return {response: "producto actualizado"}
+
+
+        }catch(error){
+            console.log(`error: ${error}`)
+        }
     } 
     
-
-    /* async updateProduct(idProduct, product) {
-        const products = await this.getProducts();
-        const productIndex = products.findIndex((product) => product.id == idProduct);
-        if (productIndex == -1) return false;
-
-        products[productIndex] = {...products[productIndex], ...product}
-        
-    }  */ 
     
-    
-     async deleteProductById(idProduct) {
-        const product = await productsModel.findOne({ idProduct })
-        return product;
+     async deleteProductById(deleteId) {
+        try{
+            const products = await productsModel.findByIdAndDelete(deleteId)
+            const listaNueva = await productsModel.find()
+            this.products = listaNueva;
+            return this.products;
+
+        }catch (e){
+            console.log(e)
+        }
         
     }
 

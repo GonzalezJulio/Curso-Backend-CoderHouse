@@ -1,13 +1,11 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongodb/ProductManager.js";
-
-const productManager = new ProductManager("products");
+const productManager = new ProductManager("products")
 const productsRouter = Router();
 
 
-
      // GET Llamado de todo los products
-productsRouter.get("/api/", async (req, res) => {
+productsRouter.get("/products", async (req, res) => {
     
     try {
         const products = await productManager.getProducts();
@@ -17,7 +15,7 @@ productsRouter.get("/api/", async (req, res) => {
     }
 });
 // GET llamado por id
-productsRouter.get("/api/products/:idProduct", async (req, res) => {
+productsRouter.get("/products/:idProduct", async (req, res) => {
     try{
         const { idProduct } = req.params;
         const product = await productManager.getProductById(idProduct)
@@ -29,12 +27,13 @@ productsRouter.get("/api/products/:idProduct", async (req, res) => {
 
 // POST Agregar products
 
-productsRouter.post("/api/products", async (req, res) => {
+productsRouter.post("/product", async (req, res) => {
     
  
     try {
         const body = req.body;
             const prod = await productManager.addProduct(body)
+            console.log(prod)
             res.send({ msg: "Producto Agregado", prod });
     
         } catch (e) {
@@ -46,7 +45,7 @@ productsRouter.post("/api/products", async (req, res) => {
 
 // PUT modificar archivos
 
-productsRouter.put("/api/products/:idProduct", async (req, res) => {
+productsRouter.put("/products/:idProduct", async (req, res) => {
     try {
         const { idProduct } = req.params;
         const product = req.body;

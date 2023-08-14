@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 const productsSchema = new mongoose.Schema({
     title: {
         type: String,
+        requider: true,
         
     },
     description: {

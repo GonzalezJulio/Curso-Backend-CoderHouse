@@ -3,7 +3,6 @@ const socket = io();
 const addProductForm = document.getElementById('addProduct');
 const deleteProductForm = document.getElementById('deleteProduct');
 
-
 socket.on("connected", (data) => {
     console.log('connected with server')
 })
