@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
 import userRouter from "./router/userRouter.js"
+import viewsCartRouter from "./router/viewsCart.js"
 import viewsMessagesRouter from "./router/viewsChat.js";
 import viewsUserRouter from "./router/viewsUserRouter.js"
 import viewsProductRouter from "./router/viewsProductRouter.js";
@@ -35,6 +36,7 @@ app.use(express.json());
 app.use("/assets",express.static( __dirname + "/public"));
 app.use(express.static( __dirname + "/public"))
 app.use('/', viewsMessagesRouter)
+app.use('/', viewsCartRouter)
 app.use('/', viewsUserRouter)
 app.use('/', viewsProductRouter)
 app.use('/api/users', userRouter)

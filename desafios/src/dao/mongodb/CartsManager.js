@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import mongoose from "mongoose";
 import cartModel from "../models/carts.schemas.js";
+import productsModel from "../models/product.model.js"
 
 
 mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
@@ -82,6 +83,58 @@ export default class CartManager {
  
         }catch(e){
 
+        }
+      }
+
+      async updateCart (cartId, prod) {
+        try{
+            const updateCart = await cartModel.findOneAndUpdate({_id: cartId}, { products:  prod })
+            return updateCart;
+        } catch (e) {
+            console.log(e)
+        }
+      }
+
+      async cartQuantity(cartId, productId, quantity){
+        try{
+            const carrito = await cartModel.findById(cartId);
+            const index = carrito.products.findeIndex((item) => item.product._id == productId);
+            if(index !== -1) {
+                carrito.products[index].quantity = quantity;
+            } else {
+                return "El producto no esta en el carrito"
+            }
+            await carrito.save()
+            return carrito;
+        }catch (error) {
+            console.log(error)
+        }
+      }
+
+      async deleteProdFromCart (cartId, productId){
+        try{
+            let cart = await cartModel.findById(cartId);
+            const indexProd = cart.products.findIndex((prod) => prod.product == productId)
+            if(cart.products[indexProd].quantity > 1){
+                cart.products[indexProd].quantity -= 1;
+            } else {
+                cart = await cartModel.findOneAndUpdate({ _id: cartId}, {$pull: { products: {product: id}}})
+            }
+            await cart.save()
+            return cart;
+        }catch (e) {
+            console.log(error) 
+        }
+      }
+
+      async cartCarrito(cartId) {
+        try{
+            const cart = await cartModel.findById(cartId);
+            cart.products = [];
+            await cart.save();
+            return cart;
+        }catch (e) {
+            console.log(e)
         }
       }
 }

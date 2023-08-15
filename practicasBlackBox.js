@@ -1,158 +1,90 @@
-import CartModel from "../models/cart.schema.js";
-import ProductModel from "../models/product.schema.js";
+import { Router } from "express";
+import ProductManager from "../dao/mongo/productManager.js";
+const productManager = new ProductManager('./src/db/productos.json');
+const productsRouter = Router();
+import ProductModel from "../dao/models/product.schema.js";
 
-export default class CartManager{
-    async getCarts(){
-        try{
-            const cartModel = await CartModel.find()
-            
-            if(!cartModel.length) return { status: 404, response: "Carts not found."}
-
-            const carts = cartModel.map(cart => ({ id: cart._id, products: cart.products }))
-            console.log(carts)
-            this.carts = carts;
-            return this.carts;
-        }catch(error){
-            console.log(`error: ${error}`)
+productsRouter.get('/', async (req, res) => {
+    try{
+        const { page, query, limit, order } = req.query;
+        let sortBy;
+        if(order === "desc") {
+            sortBy = -1;
+        } else if (order === "asc"){
+            sortBy = 1;
         }
-    }
-
-    async getCartById(id) {
-        try {
-            const cartFound = await CartModel
-                .findById(id)
-                .populate("products.product")
-                .lean();
-            if (cartFound) {
-                return cartFound;
-            } else {
-                return "Not Found";
-            }
-            
-        } catch (error) {
-            throw new Error("Could not get cart");
-        }
-    }
-
-    async createCart(){
-        try{
-            const newCart= await CartModel.create({ products: []})
-        
-            return newCart;
-        }catch(error){
-            console.log(`error: ${error}`)
-        } 
-    }
-
-    async addProductToCart(cartId, productId){
-        try {
-            const producto= await ProductModel.findById(productId)
-            const cart = await CartModel.findById(cartId);
-            if (!cart) {
-                return { status: 404, response: "Carrito no encontrado." } 
-                
-            }else if(!producto){
-                return { status: 404, response: "Producto no encontrado." } 
-                
-            }
-
-            const prodIndex = cart.products.findIndex(
-                (prod) => prod.product == productId
+        let products;
+        if (!query) {
+            products = await ProductModel.paginate(
+                {},
+                {
+                    limit: limit ?? 10,
+                    lean: true,
+                    page: page ?? 1,
+                    sort: { price: sortBy },
+                }
             );
-            console.log(prodIndex)
-            if (prodIndex !== -1) {
-                cart.products[prodIndex].quantity++;
-            } else {
-                const newProduct = { product: productId, quantity: 1 };
-                cart.products.push(newProduct);
-            }
-
-            await cart.save();
-            console.log(`se agrego ${productId} al carrito ${cartId}`)
-            return true;
-        } catch (error) {
-            throw new Error("No se logro agregar al carrito " + error);
+        } else {
+            products = await ProductModel.paginate(
+                { category: query},
+                {
+                    limit: limit ?? 3,
+                    lean: true,
+                    page: page ?? 1,
+                    sort: { price: sortBy },
+                }
+            );
         }
+        res.render("products", { products, query, order });
+        console.log(products)
+    }catch(e){
+        res.status(502).send({ error: "true" })
+        console.log(e);
     }
+
+    });
+
+productsRouter.get('/:pid', async (req, res) => {
+        const pid = (req.params.pid);
+        const product = await productManager.getProductById(pid);
+        if (product) {
+            res.send(product);
+        } else {
+            res.status(502).send({ error: "Product not found" });
+        }
+        });
+
+productsRouter.post('/',async(req,res,)=>{
+        try{
+            const body=req.body
+           const result = await ProductModel.insertMany([body])
+        res.send(result)
+        }catch(e){
+        res.status(502).send({ error: "true" })
+        console.log(e);
+        }
+        }
+        )
     
-    async updateWholeCart(cid, prod) {
-        try {
-            const updatedCart = await CartModel.findOneAndUpdate(
-                { _id: cid },
-                { products: prod }
-            );
-            console.log("Carrito actualizado", updatedCart);
-            return updatedCart;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async updateQuantity(cid, pid, quantity) {
-        try {
-            const currentCart = await CartModel.findById(cid);
-            console.log(pid)
-            const indexProduct = currentCart.products.findIndex((item) => item.product._id == pid);
-            console.log(indexProduct)
-            if (indexProduct !== -1) {
-              currentCart.products[indexProduct].quantity = quantity;
-              console.log(`Cantidad actualizada exitosamente`)
-              
-            } else {
-              return 'Product not found on cart'
-            }
-            await currentCart.save()
-            return currentCart;
-            
-          } catch (error) {
-            console.error(`Error trying to update product quantity: ${error}`);
-          }
-        };
-
-    async deleteProdFromCart(cid, pid) {
-        try {
-            const cart = await CartModel.findById(cid);
-            const prodIndex = cart.products.findIndex(
-                (prod) => prod.product === pid
-            );
-            if (prodIndex !== -1) {
-                cart.products[prodIndex].quantity++;
-            } else {
-                const prodToDelete = { product: pid };
-                cart.products.splice(prodToDelete, 1);
-            }
-            await cart.save();
-            return cart;
-        } catch (error) {
-            throw new Error(
-                "It doesn´t exists a cart or product with such ID."
-            );
-        }
-    }
-    
-    async emptyCart(cid) {
-        try {
-            const cart = await CartModel.findById(cid);
-            cart.products = [];
-            await cart.save();
-            return cart;
-        } catch (err) {
-            console.error(err);
-            // console.log("no se pudo vaciar");
-        }
-    }
-
-    async deleteCart(id){
+productsRouter.put('/:pid',async(req,res)=>{
         try{
-            const cartFound = await CartModel.find({ _id: id })
-
-            if(!cartFound) return { status: 404, response: "Carrito no encontrado." }
-
-            await CartModel.deleteOne({ _id: id })
-
-            return { status: 200, response: "Carito borrado." }
-        }catch(error){
-            console.log(`error: ${error}`)
+            const{pid}=req.params;
+            const product=req.body
+            const result=await productManager.updateProduct(pid,product)
+            res.send({update:true})
+        }catch(e){
+        res.status(502).send({ error: "true" });   
         }
-    }
-}
+    })
+
+productsRouter.delete('/:pid', async (req, res) => {
+        try{
+            const pid = Number(req.params.pid);
+            const product = await productManager.deleteProductbyId(pid);
+            res.send({delete:true});
+        }catch(e){
+            res.status(502).send({ error: "true" });   
+            }
+        });
+
+export default productsRouter;
