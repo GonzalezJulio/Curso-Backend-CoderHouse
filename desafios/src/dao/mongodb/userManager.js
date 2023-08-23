@@ -4,8 +4,10 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import userModel from "../models/user.model.js"
 import mongoose from "mongoose";
+/* import bcrypt */
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// 36 MIN CLASE STORAGE 2
 
 mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
 
@@ -55,8 +57,8 @@ export default class userManager {
       .digest("hex");
 
       return loginHash == user.password
-      ? "Usuario Loggeado!"
-      : "usuario/contrase;a incorrecta";
+      ? user.toObject()
+      : false;
     }
 
     async deleteUser(username) {

@@ -1,90 +1,121 @@
-import { Router } from "express";
-import ProductManager from "../dao/mongo/productManager.js";
-const productManager = new ProductManager('./src/db/productos.json');
-const productsRouter = Router();
-import ProductModel from "../dao/models/product.schema.js";
+import passport from "passport";
+import local from "passport-local";
+import UserManager from "../dao/mongo/userManager.js";
+const User = new UserManager();
+local.Strategy;
+// * => username, password
+const InitLocalStrategy = () => {
+  // * register
+  passport.use(
+    "register",
+    new local.Strategy(
+      {
+        passReqToCallback: true,
+        // usernameField: 'email'
+      },
+      async (req, username, password, done) => {
+        const userExists = await User.getUsuarioByName(username);
 
-productsRouter.get('/', async (req, res) => {
-    try{
-        const { page, query, limit, order } = req.query;
-        let sortBy;
-        if(order === "desc") {
-            sortBy = -1;
-        } else if (order === "asc"){
-            sortBy = 1;
-        }
-        let products;
-        if (!query) {
-            products = await ProductModel.paginate(
-                {},
-                {
-                    limit: limit ?? 10,
-                    lean: true,
-                    page: page ?? 1,
-                    sort: { price: sortBy },
-                }
-            );
-        } else {
-            products = await ProductModel.paginate(
-                { category: query},
-                {
-                    limit: limit ?? 3,
-                    lean: true,
-                    page: page ?? 1,
-                    sort: { price: sortBy },
-                }
-            );
-        }
-        res.render("products", { products, query, order });
-        console.log(products)
-    }catch(e){
-        res.status(502).send({ error: "true" })
-        console.log(e);
-    }
+        if (userExists) return done(null, false);
 
-    });
+        const { nombre, apellido } = req.body;
 
-productsRouter.get('/:pid', async (req, res) => {
-        const pid = (req.params.pid);
-        const product = await productManager.getProductById(pid);
-        if (product) {
-            res.send(product);
-        } else {
-            res.status(502).send({ error: "Product not found" });
-        }
+        const user = await User.crearUsuario({
+          nombre,
+          apellido,
+          username,
+          password,
+          role: username == "admincoder@coder.com" ? "admin" : "user",
         });
 
-productsRouter.post('/',async(req,res,)=>{
-        try{
-            const body=req.body
-           const result = await ProductModel.insertMany([body])
-        res.send(result)
-        }catch(e){
-        res.status(502).send({ error: "true" })
-        console.log(e);
-        }
-        }
-        )
-    
-productsRouter.put('/:pid',async(req,res)=>{
-        try{
-            const{pid}=req.params;
-            const product=req.body
-            const result=await productManager.updateProduct(pid,product)
-            res.send({update:true})
-        }catch(e){
-        res.status(502).send({ error: "true" });   
-        }
-    })
+        return done(null, user.toObject());
+      }
+    )
+  );
 
-productsRouter.delete('/:pid', async (req, res) => {
-        try{
-            const pid = Number(req.params.pid);
-            const product = await productManager.deleteProductbyId(pid);
-            res.send({delete:true});
-        }catch(e){
-            res.status(502).send({ error: "true" });   
-            }
-        });
+  // * login
+  passport.use(
+    "login",
+    new local.Strategy(
+      {
+        passReqToCallback: true,
+        // usernameField: 'email'
+      },
+      async (req, username, password, done) => {
+        const user = User.validarUsuario(username, password);
+        if (!user) return done("credenciales no validas!");
 
-export default productsRouter;
+        return done(null, user.toObject());
+      }
+    )
+  );
+
+  passport.serializeUser((user, done) => {
+    done(null, user._id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
+    const user = await User.getUsuarioById(id);
+    done(null, user);
+  });
+};
+export default InitLocalStrategy;
+
+
+
+
+import crypto from "crypto";
+import mongoose from "mongoose";
+import UserModel from "../../model/user.model.js";
+import bcrypt from "bcrypt";
+export default class UserManager {
+  constructor() {}
+
+  async getUsuarios() {
+    const users = await UserModel.find();
+
+    return users;
+  }
+  async getUsuarioByName(username) {
+    return await UserModel.findOne({ username });
+  }
+
+  async recoverUserPassword(username, password) {
+    const user = await UserModel.findOne({ username });
+    if (!user) return false;
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+    return true;
+  }
+
+  // minor
+  async updateUser(username, password) {
+    const user = await UserModel.findOne({ username });
+    user.user.avatar = profile_picture;
+    await user.save();
+    const userObject = user.toObject();
+    const userJSON = user.toJSON();
+    const products = await model.find({});
+    // res.render("index", { prod: products });
+  }
+
+  // * usuario = {nombre, apellido, username, password, avatar}
+
+  async crearUsuario(usuario) {
+    const salt = await bcrypt.genSalt(10);
+    usuario.password = await bcrypt.hash(usuario.password, salt);
+    const user = await UserModel.create(usuario);
+    return user;
+  }
+
+  // *
+  async validarUsuario(username, password) {
+    const user = await UserModel.findOne({ username });
+    if (!user) return false;
+    const isEqual = await bcrypt.compare(password, user.password);
+    return isEqual ? user.toObject() : false;
+  }
+}

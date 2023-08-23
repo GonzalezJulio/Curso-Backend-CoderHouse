@@ -1,4 +1,8 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import session from "express-session"
+import sessionFileStore from "session-file-store";
+import MongoStore from "connect-mongo";
 import mongoose from 'mongoose';
 import handlebars from "express-handlebars";
 import productsRouter from "./router/ProductRouter.js";
@@ -20,7 +24,7 @@ import __dirname from "./dirname.js";
 const app = express();
 
 const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-
+// 36 MIN CLASE STORAGE 2
 
 const httpServer = HTTPServer(app)
 
@@ -33,6 +37,7 @@ app.set("views",__dirname + "/views")
 app.set("view engine","handlebars")
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
+app.use(cookieParser())
 app.use("/assets",express.static( __dirname + "/public"));
 app.use(express.static( __dirname + "/public"))
 app.use('/', viewsMessagesRouter)
@@ -42,6 +47,18 @@ app.use('/', viewsProductRouter)
 app.use('/api/users', userRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
+const FS = sessionFileStore(session)
+app.use(session({
+  secret: "superseguronadieve",
+  resave: true,
+  saveUninitialized: true,
+/* store: new FS ({ path: "./sessions" }) */
+store: new MongoStore({
+  mongoUrl: `mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`,
+  ttl: 30,
+}),
+ttl: 30,
+}))
 
 
 

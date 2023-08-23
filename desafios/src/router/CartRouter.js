@@ -6,11 +6,20 @@ const productManager = new ProductManager("products")
 const cartRouter = Router();
 
 
+cartRouter.get("/", async (req, res) => {
+    try{
+        
+        const result = await cartManager.getCart();
+        res.send(result)
+    }catch(e) {
+        res.status(502).send({ error: true });
+    }
+})
 
 cartRouter.post("/", async (req, res) => {
     try{
-        const body = req.body;
-        const result = await cartManager.createCart(body);
+        const products = req.body;
+        const result = await cartManager.createCart(products);
         res.send(result);
         
 
@@ -20,24 +29,13 @@ cartRouter.post("/", async (req, res) => {
     }
 })
 
-cartRouter.get("/", async (req, res) => {
+cartRouter.get('/:cartId', async(req, res) => {
     try{
-        
-        const result = await cartManager.getCart();
-        res.send(result)
-    }catch(e) {
-        res.status(500).send({ error: true });
-    }
-})
-
-
-cartRouter.get('/:idCart', async(req, res) => {
-    try{
-        const CartID = Number(req.params.idCart)
+        const CartID = req.params.cartId;
         const cart = await cartManager.getProductById(CartID)
         const products = cart.products;
         const id = cart._id
-        res.render("cart", { products, id})
+        res.render("cart", { products,id})
     }catch(e){
         res.status(502).send({ error: "Numero de producto incorrecto" });   
     }
@@ -64,7 +62,7 @@ cartRouter.put("/:cartId", async (req, res) => {
     res.send(updatedCart)
 })
 
-cartRouter.put("/:cartId/product/:productId", async (req, res) => {
+cartRouter.post("/:cartId/product/:productId", async (req, res) => {
     const cid = req.params.cartId;
     const pid = req.params.productId;
     const quantity = req.body.quantity;
@@ -72,15 +70,16 @@ cartRouter.put("/:cartId/product/:productId", async (req, res) => {
     res.send(update)
 
 })
- cartRouter.post("/:cartId/product/:productId", async (req, res) =>{
+/*  cartRouter.post("/:cartId/product/:productId", async (req, res) =>{
     try{
         const cid = req.params.cartId
         const pid = req.params.productId
         const cartProd = await cartManager.addProductToCart(cid, pid)
+        console.log(cid, pid)
         res.send(cartProd)
     }catch (e) {
         console.log(e)
     }
 
- })
+ }) */
 export default cartRouter;

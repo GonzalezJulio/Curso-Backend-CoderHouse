@@ -18,7 +18,7 @@ export default class CartManager {
             console.log("carrito",cart)
             this.cart = cart;
             return this.cart;
-        }catch (e) {
+        }catch (error) {
             console.log(`error: ${error}`)
         }
     }
@@ -53,25 +53,26 @@ export default class CartManager {
        }
       }
 
-      async addProductToCart(idCart, prodId){
+      async addProductToCart(cartId, productId){
         try{
-            const product = await productsModel.findById(prodId)
-            const cart = await cartModel.findById(idCart)
+            const producto = await productsModel.findById(productId)
+            const cart = await cartModel.findById(cartId)
             if(!cart){return "No se encontro carrito"
-        } else if(!product) {
+        } else if(!producto) {
             return "No se encuentra Producto"
         }
 
-        const index = cart.products.findIndex((prod) => prod.product === prodId)
+        const index = cart.products.findIndex((prod) => prod.product === productId)
         if(index != -1) {cart.products[index].quantity++
         } else {
-            const productNew = {product: prodId, quantity: 1 }
-            cart.products.insertMany(productNew)
+            const productNew = {product: productId, quantity: 1 }
+            cart.products.push(productNew)
         }
         await cart.save();
+        console.log(`se agrego ${productId} al carrito ${cartId}`)
         return cart;
          } catch(e){ 
-            throw new Error("Error al agregar carrito/ producto")
+           Error("Error al agregar carrito/ producto")
 
         }
       }
@@ -97,7 +98,7 @@ export default class CartManager {
 
       async cartQuantity(cartId, productId, quantity){
         try{
-            const carrito = await cartModel.findById(cartId);
+            const carrito = await cartModel.findById({ _id: cartId }).lean();
             const index = carrito.products.findeIndex((item) => item.product._id == productId);
             if(index !== -1) {
                 carrito.products[index].quantity = quantity;
