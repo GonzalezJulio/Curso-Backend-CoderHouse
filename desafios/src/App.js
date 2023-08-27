@@ -1,53 +1,42 @@
+
+// Dependencias
 import express from "express";
-import cookieParser from "cookie-parser";
+import __dirname from "./dirname.js";
+import handlebars from "express-handlebars";
+import mongoose from 'mongoose';
+import { Server as SocketServer } from "socket.io";
+import {Server as HTTPServer} from "http";
+import MongoStore from "connect-mongo";
 import session from "express-session"
 import sessionFileStore from "session-file-store";
-import MongoStore from "connect-mongo";
-import mongoose from 'mongoose';
-import handlebars from "express-handlebars";
+import passport from "passport";
+import { initPassport } from "./config/passport.config.js";
+import cookieParser from "cookie-parser";
+
+//Gestores de ruta
 import productsRouter from "./router/ProductRouter.js";
-import userRouter from "./router/userRouter.js"
-import viewsCartRouter from "./router/viewsCart.js"
-import viewsMessagesRouter from "./router/viewsChat.js";
-import viewsUserRouter from "./router/viewsUserRouter.js"
-import viewsProductRouter from "./router/viewsProductRouter.js";
+
+import ViewsRouter from "./router/ViewsRouter.js"
+import router from './router/sessions.router.js' 
 import cartRouter from "./router/CartRouter.js";
+
+// Manager
 import MessageManager from "./dao/mongodb/MessagesManager.js";
 import userManager from "./dao/mongodb/userManager.js";
 import ProductManager from "./dao/mongodb/ProductManager.js";
 const manager = new userManager("user")
 const productManager = new ProductManager("products")
 const messagesDb = new MessageManager("messages")
-import { Server as SocketServer } from "socket.io";
-import {Server as HTTPServer} from "http";
-import __dirname from "./dirname.js";
+
+//Servidor
 const app = express();
-
-const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-// 36 MIN CLASE STORAGE 2
-
-const httpServer = HTTPServer(app)
-
-
-const io =  new SocketServer(httpServer)
-
-
-app.engine("handlebars",handlebars.engine())
-app.set("views",__dirname + "/views")
-app.set("view engine","handlebars")
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
-app.use(cookieParser())
-app.use("/assets",express.static( __dirname + "/public"));
-app.use(express.static( __dirname + "/public"))
-app.use('/', viewsMessagesRouter)
-app.use('/', viewsCartRouter)
-app.use('/', viewsUserRouter)
-app.use('/', viewsProductRouter)
-app.use('/api/users', userRouter)
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartRouter)
-const FS = sessionFileStore(session)
+const httpServer = HTTPServer(app)
+
+//Conexion a mongoose
+const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
+
 app.use(session({
   secret: "superseguronadieve",
   resave: true,
@@ -60,6 +49,31 @@ store: new MongoStore({
 ttl: 30,
 }))
 
+
+
+const io =  new SocketServer(httpServer)
+
+
+app.engine("handlebars",handlebars.engine())
+app.set("views",__dirname + "/views")
+app.set("view engine","handlebars")
+app.use("/assets",express.static( __dirname + "/public"));
+app.use(express.static( __dirname + "/public"))
+app.use(cookieParser())
+
+
+//Routers
+app.use('/', ViewsRouter)
+
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartRouter)
+app.use('/api/sessions', router)
+const FS = sessionFileStore(session)
+
+// Passport
+initPassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 
@@ -84,6 +98,7 @@ io.on('connection', async (socket) => {
 
   socket.on('new_user', async (data) => {
     await manager.createUser(data)
+    console.log(data)
   })
 
   socket.on('delete_username',async (data) => {
@@ -104,10 +119,6 @@ socket.on("message", async (data) => {
 })
 
 });
-
-
-
-
 
 
 httpServer.listen(8080,()=>console.log("ATR"));

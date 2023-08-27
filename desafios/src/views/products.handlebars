@@ -1,35 +1,23 @@
-<div>
-    <h1 class="p-3">List of Products</h1>  
-    <div class="row justify-content-center">        
-        {{#each products.docs}}
-        <div class="col-sm-3 mb-2 mb-sm-0 m-5 p-1">
-        <div class="card p-2" >
-            <div class="card-body">
-            <li>Title: {{this.title}}</li>
-            <li>Description: {{this.description}}</li>
-            <li>Category: {{this.category}}</li>
-            <li>Price: ${{this.price}}</li>
-            <li class="idValue pb-4">Id: {{this._id}}</li>
-            <button class="addToCart btn btn-primary p-2" data-id={{this._id}}>Agregar al carrito</button>
-            </div>
-        </div>
-        </div>
-        {{/each}}
-    </ul>
-    <div class="p-4">
-        {{#if products.hasPrevPage}}
-            <a class="btn btn-secondary"
-                href="/api/products?page={{products.prevPage}}&query={{query}}&limit={{products.limit}}&order={{order}}"
-            >Anterior</a>
-        {{/if}}
-        <span>Pagina {{products.page}} de {{products.totalPages}}</span>
-        {{#if products.hasNextPage}}
-            <a class="btn btn-secondary"
-                href="/api/products?page={{products.nextPage}}&query={{query}}&limit={{products.limit}}&order={{order}}"
-            >Siguiente</a>
-        {{/if}}
-    </div>
-    </div>
-    
-</div>
-<script src="/js/carts.js"></script>
+<h2>PRODUCTS VIEW</h2>
+ <a href='http://localhost:8080/'> <button> Home </button></a>
+ <h3>Welcome {{user.name}}</h3>
+ <button style="width: 120px" id="logout">Logout </button>
+{{#each products}}
+  <div>
+    <h5>{{title}}</h5>
+    <p>{{description}}</p>
+    <h5>{{this.price}}</h5>
+      <button style="width: 120px">Add to cart  </button>
+
+  </div>
+{{/each}}
+{{! validacion de queries para el handlebar, limit SIEMPRE llega, porque lo valida el router}}
+<div style="flex-direction: row;justify-content: space-around">
+  {{#if hasPrevPage}}
+  <a href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{prevPage}}{{#if category}}&category={{category}}{{/if}}"><button>Pagina Anterior</button></a>
+{{/if}}
+{{#if hasNextPage}}
+  <a href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{nextPage}}{{#if category}}&category={{category}}{{/if}}"><button>Pagina Siguiente</button></a>
+{{/if}}
+  </div>
+  <script src="/js/logout.js" ></script>

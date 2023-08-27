@@ -1,67 +1,58 @@
-import fs from "fs"
 import crypto from "crypto"
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import userModel from "../models/user.model.js"
 import mongoose from "mongoose";
-/* import bcrypt */
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// 36 MIN CLASE STORAGE 2
-
-mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
-
+import userModel from "../models/user.model.js"
+import bcrypt  from "bcrypt"
 
 export default class userManager {
 
     constructor () {}
+    
     async getUser() {
-        try {
-          
-          const users = await userModel.find();
-          return users;
-        } catch (e) { 
-          return [];
-        }
-      }
+       const users = await userModel.find();
+       return users;
+    }
+    
+    async getUserByName(username) {
+      return await userModel.findOne({ username });
+    }
+    
+    async recoverUserPassword (username, password) {
+      const user = await userModel.findOne({ username });
+      if(!user) throw new Error("Usuario no encontrado");
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt )
+      await user.save();
+      return true;
+    }
 
-    async updateUser(username, profile_picture) {
-      const user = await userModel.findOne({username})
+    async updateUser(username, password) {
+      const user = await userModel.findOne({ username });
+      user.user.avatar = profile_picture;
+      await user.save();
+      const userObject = user.toObaject();
+      const userJSON = await model.find({});
+      /* res.render("index", { prod: products } ) */
       
     };
 
     // usuario = {name, lastname, user, password } 
   
     async createUser(users) {
-      users.salt = crypto.randomBytes(128).toString("base64");
-      users.password = crypto
-        .createHmac("sha256", users.salt)
-        .update(users.password)
-        .digest("hex");
-        userModel.create(users)
-        console.log(users)
-      const user = await userModel.insertMany([users]);
+      const salt = await bcrypt.genSalt(10);
+      users.password = await bcrypt.hash(users.password, salt);
+        
+      const user = await userModel.create(users);
       return user;
-
-    
     }
 
     async validateUser(username, password) {
-      
-      const user = await userModel.findOne({ username })
-      if (!user) return "Error, usuario no exite!";
-      
-      const loginHash = crypto
-      .createHmac("sha256", user.salt)
-      .update(password)
-      .digest("hex");
-
-      return loginHash == user.password
-      ? user.toObject()
-      : false;
+      const user = await userModel.findOne({ username });
+      if (!user) return false;
+      const isEqual = await bcrypt.compare(password, user.password);
+      return isEqual ? user.toObject() : false;
     }
 
-    async deleteUser(username) {
+    async deleteUser(username) {  
       const users = await userModel.deleteOne({ username })
         return users;
     }

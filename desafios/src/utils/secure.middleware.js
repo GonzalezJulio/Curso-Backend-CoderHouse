@@ -1,22 +1,8 @@
-const isAuthenticated = (req, res, next) => {
-    if (req.session.user) {
-        next();
-    } else {
-        res.redirect('/login');
-    }
+export const protectView = (req, res, next) => {
+  if (!req.user) return res.redirect("/login");
+  next();
 };
-
-const isAdmin = (req, res, next) => {
-    if (req.session.user && req.session.user.role === 'admin') {
-        next();
-    } else {
-        res.status(403).json({ message: 'Acceso no autorizado.' });
-    }
+export const isLogged = (req, res, next) => {
+  if (req.user) return res.redirect("/profile");
+  next();
 };
-
-const hasAdminCredentials = (email, password) => {
-    // Verificar si las credenciales coinciden con las del administrador
-    return email === 'adminCoder@coder.com' && password === 'adminCod3r123';
-};
-
-export { isAuthenticated, isAdmin, hasAdminCredentials };

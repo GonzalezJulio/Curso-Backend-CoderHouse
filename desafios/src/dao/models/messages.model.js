@@ -1,18 +1,15 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
+const collectionName = 'messages'
 
 const messageSchema = new mongoose.Schema({
-    user: {
-        type: String,
-        required: true,
-    },
-    message: {
-        type: String,
-        required: true,
-    },
+   user: String,
+   message: String,
 });
 
+messageSchema.plugin(paginate)
 
-const messageModel = mongoose.model("messages", messageSchema)
+const messageModel = mongoose.model(collectionName, messageSchema)
 
 export default messageModel;

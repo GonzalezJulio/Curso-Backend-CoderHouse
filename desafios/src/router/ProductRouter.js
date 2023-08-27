@@ -17,6 +17,7 @@ productsRouter.get('/', async (req, res) => {
         }
         let products;
         if (!query) {
+           
             products = await productsModel.paginate(
                 {},
                 {
@@ -49,6 +50,7 @@ productsRouter.get("/products", async (req, res) => {
     
     try {
         const products = await productManager.getProducts();
+        console.log(products)
         res.send(products)
     } catch (e) {
         res.status(500).send({ error: true });
@@ -68,11 +70,11 @@ productsRouter.get("/:idProduct", async (req, res) => {
 // POST Agregar products
 
 productsRouter.post("/product", async (req, res) => {
-    
+    const body = req.body;
  
     try {
-        const body = req.body;
-            const prod = await productsModel.insertMany([body])
+       
+            const prod = await productManager.addProduct(body)
             console.log(prod)
             res.send({ msg: "Producto Agregado", prod });
     
