@@ -1,5 +1,6 @@
 import { Router } from "express"; 
 import CartManager from "../dao/mongodb/CartsManager.js"
+import mongoose from "mongoose";
 const cartManager = new CartManager();
 const cartRouter = Router()
 
@@ -34,6 +35,7 @@ cartRouter.post("/", async (req, res) => {
 cartRouter.get('/:cid', async(req, res) => {
     const cid = req.params.cid;
     const foundCart = await cartManager.getCartById(cid)
+   
     if( foundCart) {
         res.send(foundCart)
     } else {
@@ -59,8 +61,8 @@ cartRouter.put('/:cid/product/:pid', async (req, res) =>{
     const cid = req.params.cid;
     const pid = req.params.pid;
     const quantity = req.body.quantity; 
-    const quantityNUmber = parseInt(quantity.quantity)
-    const result = await cartManager.updateQuantity(cid, pid, quantity)
+    const quantityNumber = parseInt(quantity)
+    const result = await cartManager.updateQuantity(cid, pid, quantityNumber)
     res.send(result)
 })
 cartRouter.delete('/:cid', async (req, res) => {
