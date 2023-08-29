@@ -65,8 +65,8 @@ app.use(cookieParser())
 //Routers
 app.use('/', ViewsRouter)
 
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartRouter)
+app.use('/api/product', productsRouter);
+app.use('/api/cart', cartRouter)
 app.use('/api/sessions', router)
 const FS = sessionFileStore(session)
 

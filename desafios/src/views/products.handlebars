@@ -4,8 +4,8 @@
  <button style="width: 120px" id="logout">Logout </button>
 {{#each products}}
   <div>
-    <h5>{{title}}</h5>
-    <p>{{description}}</p>
+    <h5>{{this.title}}</h5>
+    <p>{{this.description}}</p>
     <h5>{{this.price}}</h5>
       <button style="width: 120px">Add to cart  </button>
 

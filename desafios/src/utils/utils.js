@@ -13,10 +13,10 @@ export const isValidPassword = (user, password) => bcrypt.compareSync(password, 
 
 
 
-const KEY = 
+const KEY = "holamundo"
 export const generateToken = (user) => {
     const token = jwt.sign({ user }, KEY, { expiresIn: '6h' })
-    return token 
+    return token }
 export const authToken = (req, res, next) => {
     const headerAuth = req.headers
     console.log(req.headers.authorization)
