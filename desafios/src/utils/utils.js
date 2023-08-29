@@ -13,7 +13,7 @@ export const isValidPassword = (user, password) => bcrypt.compareSync(password, 
 
 
 
-const KEY = process.env.JASONWEBTOKEN_KEY
+const KEY = 
 export const generateToken = (user) => {
     const token = jwt.sign({ user }, KEY, { expiresIn: '6h' })
     return token 
