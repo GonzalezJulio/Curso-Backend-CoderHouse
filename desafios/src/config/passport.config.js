@@ -58,7 +58,7 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (userE
             return done(null, false)
         }
         if (!isValidPassword(user, password)) return done(null, false)
-        return done(null, user) //cuando esta info sale de aca, queda guardada en req.user
+        return done(null, user) 
     } catch (error) {
         return done(error)
     }
@@ -92,4 +92,4 @@ passport.use('github', new gitHubService({
     }
 }))
 
-export const initPassport = () => {/*Quedo vacio despues de la sacar la estrategia 'register' de adentro hecha en clase*/ }
+export const initPassport = () => { }

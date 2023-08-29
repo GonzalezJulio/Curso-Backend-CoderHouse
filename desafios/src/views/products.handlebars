@@ -11,7 +11,7 @@
 
   </div>
 {{/each}}
-{{! validacion de queries para el handlebar, limit SIEMPRE llega, porque lo valida el router}}
+
 <div style="flex-direction: row;justify-content: space-around">
   {{#if hasPrevPage}}
   <a href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{prevPage}}{{#if category}}&category={{category}}{{/if}}"><button>Pagina Anterior</button></a>

@@ -23,26 +23,26 @@ router.get('/products', async (req, res) => {
         console.log('entra products')
         if (!req.session.user) res.status(400).send({ status: 'error', message: 'You are not logged in.' })
         const user = req.session.user
-        //Optimizado, validamos la query, si no existe, le otorgamos el valor por defecto.
+        
         const page = parseInt(req.query.page) || 1
         const limit = parseInt(req.query.limit) || 5
         const sort = parseInt(req.query.sort) || -1
         const category = req.query.category || ''
 
-        //Armamos la pipeline del aggregate
-        const skip = (page - 1) * limit; //calcula algo que nose
-        const matchStage = category ? { category: category } : {}; //Si existe joya, sino lo deja vacio
+        
+        const skip = (page - 1) * limit; 
+        const matchStage = category ? { category: category } : {}; 
 
-        const countPipeline = [ //variable condicional
-            { $match: matchStage }, //se filtra por category, si esta vacio devuelve todo sin filtrar
-            { $count: 'totalCategoryCount' },//$count siempre va a devolver la cantidad de docs, el string es libre
+        const countPipeline = [ 
+            { $match: matchStage }, 
+            { $count: 'totalCategoryCount' },
         ];
-        //ejecuta la pipeline para obtener el resultado
+        
         const totalCountResult = await productModel.aggregate(countPipeline).exec();
-        //totalCounResult no es un array, pero length igual recibe el dato. Se usa en hasNextPage
+        
         const totalCategoryCount = totalCountResult.length > 0 ? totalCountResult[0].totalCategoryCount : 0;
 
-        //pasamos los valores a la pipeline
+       
         const pipeline = [
             { $match: matchStage },
             { $sort: { price: sort } },
@@ -51,13 +51,13 @@ router.get('/products', async (req, res) => {
         ];
 
         const products = await productModel.aggregate(pipeline).exec();
-        //validaciones de cantidad de paginas segun resultados anteriores
-        const hasNextPage = skip + products.length < totalCategoryCount; //boolean
-        const hasPrevPage = page > 1;//boolean
+        
+        const hasNextPage = skip + products.length < totalCategoryCount; 
+        const hasPrevPage = page > 1;
         const nextPage = hasNextPage ? page + 1 : null;
         const prevPage = hasPrevPage ? page - 1 : null;
 
-        //finalmente le enviamos mediante el render, los datos necesarios para los handlebars.
+        
         res.render('products', { products, hasPrevPage, hasNextPage, prevPage, nextPage, limit, sort, category, user })
 
     } catch (error) { res.status(500).send({ status: 'error', error: error.message }); }
@@ -67,7 +67,7 @@ router.get('/products', async (req, res) => {
 router.get('/carts', async (req, res) => {
     if (!req.session?.user) res.redirect('/login');
     let carts = await cartManager.getCart()
-    res.render('carts', { carts }) //le enviamos mediante el render, los datos necesarios para los handlebars.
+    res.render('carts', { carts }) 
 })
 
 //GET CART BY ID Router de carts
@@ -100,18 +100,18 @@ router.get('/register', (req, res) => {
     res.render('register')
 })
 
-//GET login (agrega datos de usuario a req.session si el login es correcto)
+//GET login 
 router.get('/login', (req, res) => {
     const session = { current: false }
     if (req.session.user) {
         console.log('logged in')
         session.current = true
-        session.name = req.session.user.first_name
+        session.name = req.session.user.name
     }
     res.render('login', { session })
 })
 
-//GET profile, seria el finally this del tema sessions
+
 router.get('/profile', async (req, res) => {
     if (req.session.user === undefined) {
         res.render('failedlogin')

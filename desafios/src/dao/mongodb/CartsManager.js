@@ -21,8 +21,8 @@ export default class CartManager {
         return carts.length <= 0 ? ({ status: 'Error.', message: 'Carts collection is empty.' }) : (carts)
     }
 
-    async getCartById({_id: ObjectId}) {
-        return await cartModel.findById({ _id: ObjectId }).populate('products', 'product')
+    async getCartById(id) {
+        return await cartModel.findById(id).populate('products', 'product')
 
     }
 
