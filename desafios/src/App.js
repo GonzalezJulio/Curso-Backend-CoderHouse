@@ -65,8 +65,8 @@ app.use(cookieParser())
 //Routers
 app.use('/', ViewsRouter)
 
-app.use('/api/product', productsRouter);
-app.use('/api/cart', cartRouter)
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartRouter)
 app.use('/api/sessions', router)
 const FS = sessionFileStore(session)
 
@@ -78,34 +78,7 @@ app.use(passport.session());
 
 
 // Socket Product
-io.on('connection', async (socket) => {
-  socket.emit('connected', (data) => {
-  console.log('connected with server')
-})
-  socket.emit('productos',await productManager.getProducts())
 
-  socket.on('new_prod', async (data) => {
-    productManager.addProduct(data)
-      
-      socket.emit('productos', await productManager.getProducts())     
-  })
-
-  socket.on('delete_prod',async (data) => {
-    productManager.deleteProductById(data.pid)
-
-      socket.emit('productos',await productManager.getProducts())
-  })
-
-  socket.on('new_user', async (data) => {
-    await manager.createUser(data)
-    console.log(data)
-  })
-
-  socket.on('delete_username',async (data) => {
-    await manager.deleteUser(data.usna)
-})
-
-});
 io.on('connection', async (socket) => {
   console.log('Conexion de Usuario');
   

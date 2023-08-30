@@ -46,7 +46,7 @@ productsRouter.get('/', async (req, res) => {
     }
 
 })
-productsRouter.get("/products", async (req, res) => {
+productsRouter.get("/", async (req, res) => {
     
     try {
         const products = await productManager.getProducts();
@@ -57,10 +57,10 @@ productsRouter.get("/products", async (req, res) => {
     }
 });
 // GET llamado por id
-productsRouter.get("/:idProduct", async (req, res) => {
+productsRouter.get("/:pid", async (req, res) => {
     try{
-        const { idProduct } = req.params;
-        const product = await productManager.getProductById(idProduct)
+        const { pid } = req.params;
+        const product = await productManager.getProductById(pid)
         res.send(product)
     } catch (e) {
         res.status(500).send({ error: true });
@@ -69,29 +69,25 @@ productsRouter.get("/:idProduct", async (req, res) => {
 
 // POST Agregar products
 
-productsRouter.post("/product", async (req, res) => {
-    const body = req.body;
- 
-    try {
-       
-            const prod = await productManager.addProduct(body)
-            console.log(prod)
-            res.send({ msg: "Producto Agregado", prod });
-    
-        } catch (e) {
-            console.log(e);
-            res.status(500).send({ error: true });
-        }
+productsRouter.post("/", async (req, res) => {
+    try{
+        const body=req.body
+       const result = await productsModel.insertMany([body])
+    res.send(result)
+    }catch(e){
+    res.status(502).send({ error: "true" })
+    console.log(e);
+    }
     
 })
 
 // PUT modificar archivos
 
-productsRouter.put("/products/:idProduct", async (req, res) => {
+productsRouter.put("/products/:pid", async (req, res) => {
     try {
-        const { idProduct } = req.params;
+        const { pid } = req.params;
         const product = req.body;
-        const prod = await productManager.updateProduct(idProduct, product)  // revisar video para agregar el metodo que corresponde
+        const prod = await productManager.updateProduct(pid, product)  // revisar video para agregar el metodo que corresponde
         res.send({ update: true });
     }catch (e) {
         res.status(500).send({ error: true });
@@ -100,10 +96,10 @@ productsRouter.put("/products/:idProduct", async (req, res) => {
 
 
 // Delete para eliminar objetos
-productsRouter.delete("/api/products/:idProduct", async (req, res) => {
+productsRouter.delete("/:idProduct", async (req, res) => {
     try {
-        const { idProduct } = req.params;
-        const prod = await productManager.deleteProductById(idProduct)
+        const { pid } = req.params;
+        const prod = await productManager.deleteProductById(pid)
         res.send({ deleted: true, prod });
     } catch (e) {
         res.status(500).send({ error: true });

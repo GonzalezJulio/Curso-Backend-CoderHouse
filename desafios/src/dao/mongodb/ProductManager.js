@@ -12,30 +12,22 @@ export default class ProductManager {
         return products
     }
 
-    async generateNewCode() {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let randomCode = '';
-        for(let i = 0; i < 7; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            randomCode += characters[randomIndex];
-        }
-        return randomCode
-    }
+    
 
     async addProduct (product) {
-        product.code = await this.generateNewCode()
-        try {
-            await productsModel.create(product);
-            return ({ stauts: 'Success', message: 'Producto Agregado', payload: product })
-    } catch(e){
-        console.log((e) => "Error al cargar Productos")
-
-    }
+        try{
+            const producto = await productsModel.insertMany([product])
+            console.log(producto)  
+            return producto
+        }
+        catch{(e)=>{
+            console.log("Hubo un error en el ingreso de datos")
+        } }
     };
     
     async getProductById (pid) {
         try {
-            let foundProduct = await productsModel.findById(pid)
+            let foundProduct = await productsModel.findOne({_id: pid})
             if(!foundProduct) return { status: 'failed', message: `Product ${pid} no encontrado ` }
             return foundProduct
 

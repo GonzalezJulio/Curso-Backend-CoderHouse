@@ -4,7 +4,7 @@ import paginate from "mongoose-paginate-v2"
 const collectionName = 'products'
 
 const productsSchema = new mongoose.Schema({
-    
+   
     title:{
         type: String,
         required: true,
@@ -20,7 +20,7 @@ const productsSchema = new mongoose.Schema({
     },
     thumbnail:{
         type: String,
-        required: true,
+        
     },
     code:{
         type: String,
