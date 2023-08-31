@@ -21,8 +21,16 @@ export default class CartManager {
         return carts.length <= 0 ? ({ status: 'Error.', message: 'Carts collection is empty.' }) : (carts)
     }
 
-    async getCartById(pid) {
-        return await cartModel.findOne({ id: pid}).populate('products', 'product')
+    async getCartById(cid) {
+        /* return await cartModel.findOne(pid).populate('products', 'product') */
+        try {
+            let foundCart = await cartModel.findOne({_id: cid}).populate('products', 'product')
+            if(!foundCart) return { status: 'failed', message: `Carrito ${cid} no encontrado ` }
+            return foundCart
+
+        } catch(error) {
+            console.log(`error: ${error}`)
+        }
 
     }
 
