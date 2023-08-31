@@ -83,12 +83,12 @@ productsRouter.post("/", async (req, res) => {
 
 // PUT modificar archivos
 
-productsRouter.put("/products/:pid", async (req, res) => {
+productsRouter.put("/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
         const product = req.body;
         const prod = await productManager.updateProduct(pid, product)  // revisar video para agregar el metodo que corresponde
-        res.send({ update: true });
+        res.send(prod , { update: true });
     }catch (e) {
         res.status(500).send({ error: true });
     }
@@ -96,7 +96,7 @@ productsRouter.put("/products/:pid", async (req, res) => {
 
 
 // Delete para eliminar objetos
-productsRouter.delete("/:idProduct", async (req, res) => {
+productsRouter.delete("/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
         const prod = await productManager.deleteProductById(pid)

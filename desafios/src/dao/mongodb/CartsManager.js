@@ -34,15 +34,15 @@ export default class CartManager {
 
     }
 
-    async addProductToCart(cartId, productId) {
+    async addProductToCart(cid, pid) {
         try{
-            const cart = await this.getCartById(cartId);
+            const cart = await this.getCartById(cid);
             if(!cart){return({status:'error',message:"No se encontro el carrito."})}
 
-            const thisProduct = await product.getProductById(productId)
+            const thisProduct = await product.getProductById(pid)
             if(!thisProduct) {return { status: "failed", message: 'Producto no existente'}}
 
-            const index = await cart.products.findIndex((p) => p.product._id.toString() === productId);
+            const index = await cart.products.findIndex((p) => p.product._id.toString() === pid);
             if (index !== -1) {
                 cart.products[index].quantity = parseInt(cart.products[index].quantity) + 1
             } else {
@@ -57,19 +57,19 @@ export default class CartManager {
     }
 
     
-    async deleteProductFromCart(cartId, productId) {
+    async deleteProductFromCart(cid, pid) {
         try {
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findById(cid);
 
             if(!cart) {
                 return { status: 'Failed', message: 'Carrito no encontrado'};
             }
 
-            const foundProduct = await product.getProductById(productId);
+            const foundProduct = await product.getProductById(pid);
             if (!foundProduct) {return { status: 'failed', message: 'Producto no encontrado'};
             }
 
-            const index = cart.products.findIndex((p) => p.product.toString() === productId);
+            const index = cart.products.findIndex((p) => p.product.toString() === pid);
             if (index !== -1) {
                 cart.products.splice(index, 1);
                 await cartModel.findByIdAndUpdate(cart._id, cart);
@@ -85,11 +85,11 @@ export default class CartManager {
         }
     };
 
-    async updateCartProducts(cartId, newProduct){
+    async updateCartProducts(cid, newProduct){
         try{
-            const cart = await cartModel.findById(cartId)
+            const cart = await cartModel.findById(cid)
             cart.products = newProduct
-            await cartModel.findByIdAndUpdate(cartId, cart);
+            await cartModel.findByIdAndUpdate(cid, cart);
             return {status:'success', message: 'Carrito actualizado con exito', payload: cart}
 
         } catch (error) {
@@ -97,17 +97,17 @@ export default class CartManager {
         };
     };
 
-    async updateQuantity (cartId, productId, quantity) {
+    async updateQuantity (cid, pid, quantity) {
         try {
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findById(cid);
             if (!cart) { return {status: 'failed', message: 'carrito no encontrado' } };
             
-            const product = cart.products.find(item => item.product === productId)
+            const product = cart.products.find(item => item.product === pidc)
             if (!product) { return {status: 'failed', message: 'producto no encontrado'}};
 
             product.quantity = quantity
 
-            const index = cart.products.findIndex(item => item.product === productId)
+            const index = cart.products.findIndex(item => item.product === pid)
             cart.products[index] = product;
 
             await cartModel.findByIdAndUpdate(cart._id, cart)
@@ -119,13 +119,13 @@ export default class CartManager {
     };
 
 
-    async empyCart(cartId) {
+    async empyCart(cid) {
         try{
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findById(cid);
             if(!cart){return {status: 'failed', message: 'No se pudo encontrar el carrito'}};
 
             cart.products = [];
-            await cartModel.findByIdAndUpdate(cartId, cart)
+            await cartModel.findByIdAndUpdate(cid, cart)
             return { status: 'success', message: 'Carrito Actualizado', payload: cart } 
 
 
