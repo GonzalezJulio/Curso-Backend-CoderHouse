@@ -1,13 +1,10 @@
-//updated, Clase 21. Autorizacion y Autenticacion + github
 import passport from 'passport'
 import local from 'passport-local'
 import userModel from '../dao/models/user.model.js'
 import { createHash, isValidPassword} from '../utils/utils.js'
 import gitHubService from 'passport-github2'
 
-
 const LocalStrategy = local.Strategy
-
 
 passport.serializeUser((user, done) => {
     done(null, user._id)
@@ -17,22 +14,17 @@ passport.deserializeUser(async (id, done) => {
     done(null, user)
 })
 
-
 passport.use('register', new LocalStrategy(
-    
     { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
-        
         const { name, lastname, email, age, password: userPassword } = req.body
         try {
             let user = await userModel.findOne({ email: username })
             if (user) {
-                console.log("User already exist.") //-->works ok
-                
+                console.log("Usuario Existente") 
                 return done(null, false)
             }
             const newUser = { name, lastname, email, age, password: createHash(userPassword) } //hasheamos el pass
             let result = await userModel.create(newUser)
-            
             return done(null, result)
         } catch (error) { return res.status(400).send({ status: "error", error: "" }) }
     }
@@ -43,7 +35,7 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (userE
     try {
         const user = await userModel.findOne({ email: userEmail })
         if (!user) {
-            console.log("passport.config login strat : user doesnt exist")
+            console.log("Inicializacion de Usuario: Usuario no exite")
             return done(null, false)
         }
         if (!isValidPassword(user, password)) return done(null, false)
@@ -65,11 +57,12 @@ passport.use('github', new gitHubService({
         let user = await userModel.findOne({email: profile._json.email})
         if (!user) {
             let newUser = {
-                first_name: profile._json.login,
-                last_name: '',
+                name: profile._json.login,
+                lastname: '',
                 age: '',
                 email: profile._json.email,
-                password: ''
+                password: '',
+                cartId: 'for now, just a string',
             }
             let result = await userModel.create(newUser)
             done(null, result)

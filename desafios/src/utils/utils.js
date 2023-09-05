@@ -23,7 +23,7 @@ export const authToken = (req, res, next) => {
     console.log('utils authToken headerAuth is:')
     console.log(headerAuth)
     if (!headerAuth) return res.status(401).send({ status: 'error', error: 'Not Autorized' })
-    
+    const token = headerAuth.split(' ')
 
     jwt.verify(token, KEY, (error, credentials) => {
         console.log(error)

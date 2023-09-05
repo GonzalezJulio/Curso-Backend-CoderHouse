@@ -73,6 +73,7 @@ productsRouter.post("/", async (req, res) => {
     try{
         const body=req.body
        const result = await productsModel.insertMany([body])
+       console.log(result)
     res.send(result)
     }catch(e){
     res.status(502).send({ error: "true" })

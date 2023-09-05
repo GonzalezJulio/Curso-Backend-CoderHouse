@@ -4,7 +4,7 @@ import paginate from "mongoose-paginate-v2"
 
 const collectionName = 'carts'
 
-const cartSchema = new mongoose.Schema({
+const cartSchema =  mongoose.Schema({
     products: [
         {
             product: {type: mongoose.Schema.Types.ObjectId, ref: "products", required: true },
