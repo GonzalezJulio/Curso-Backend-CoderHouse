@@ -1,4 +1,4 @@
-
+// Video de Arquitectura de capas 45:13
 // Dependencias
 import express from "express";
 import __dirname from "./dirname.js";
@@ -15,15 +15,18 @@ import cookieParser from "cookie-parser";
 
 //Gestores de ruta
 import productsRouter from "./router/ProductRouter.js";
-
 import ViewsRouter from "./router/ViewsRouter.js"
 import router from './router/sessions.router.js' 
 import cartRouter from "./router/CartRouter.js";
+//Router ArqCaps
+import PRouter from './routers/products.router.js'
+
 
 // Manager
 import MessageManager from "./dao/mongodb/MessagesManager.js";
 import userManager from "./dao/mongodb/userManager.js";
 import ProductManager from "./dao/mongodb/ProductManager.js";
+import ProdRouter from "./routers/products.router.js";
 const manager = new userManager("user")
 const productManager = new ProductManager("products")
 const messagesDb = new MessageManager("messages")
@@ -64,11 +67,13 @@ app.use(cookieParser())
 
 //Routers
 app.use('/', ViewsRouter)
-
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
 app.use('/api/sessions', router)
 const FS = sessionFileStore(session)
+
+//Router ArqCapas
+app.use("/product", ProdRouter)
 
 // Passport
 initPassport();

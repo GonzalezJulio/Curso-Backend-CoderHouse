@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import paginate from "mongoose-paginate-v2"
 
 const collectionName = 'products'
-
+// (title, description, price, thumbnail, code, stock, category)
 const productsSchema = new mongoose.Schema({
    
     title:{
