@@ -1,4 +1,4 @@
-import productsModel from "../models/product.model.js";
+import productsModel from "../schemas/product.model.js";
 import mongoose from "mongoose";
 
 mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CartManager from '../dao/mongodb/CartsManager.js'
+import CartManager from '../models/filemanager/CartsManager.js'
 import productModel from "../dao/models/product.model.js";
 import { authToken } from "../utils/utils.js";
 

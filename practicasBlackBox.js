@@ -1,64 +1,88 @@
-import { Router } from "express";
-import passport from "passport";
-import { createHash, isValidPassword, authToken, generateToken } from "../utils.js";
-import userModel from "../dao/models/users.js";
+import CartsService from '../service/carts.service.js'
 
-const router = Router()
+class CartsController {
 
-//api/sessions
-
-//-------------------------------REGISTER & LOGIN (WITH PASSPORT)
-//Updated clase 24 - passport con sessions.
-router.post('/register', passport.authenticate('register', { failureRedirect: '/failregister' }), async (req, res) => {
-    res.send({ status: 'succes', message: 'User registered' })
-})
-router.get('/failedregister', async (req, res) => {
-    res.send({ error: 'Failed register.' })
-})
-
-router.post('/login', passport.authenticate('login', { failureRedirect: '/failedloginauth' }), async (req, res) => {
-    if (!req.user) return res.status(400).send({ status: 'error', error: 'Invalid credentials' })
-    // console.log(req.user) //passport authentication, if successfull, returns the user info like in mongoDb in req.user
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age,
-        password: req.user.password,
-        cartId: req.user.cartId,
-        role: req.user.role
+    getAll = async (req, res) => {
+        try {
+            const allCarts = await CartsService.getAll()
+            res.status(200).send({ total: allCarts.carts.length, payload: allCarts })
+        } catch (error) { throw error }
     }
-    res.status(200).send({ status: 200, message: `${req.user.name} ${req.user.lastname} logged in.` })
-})
-router.get('/failedloginauth', async (req, res) => {
-    console.log('Login failed.')
-    res.status(400).send({ status: 400, error: 'Failed Login.' })
-})
-//end register & login with passport
 
+    getCartById = async (req, res) => {
+        try {
+            const cid = req.params.cid
+            const foundCart = await CartsService.getCartById(cid)
+            res.send({ payload: foundCart })
 
-//-------------------------------GITHUB LOGIN
-//Updated clase 21 - github
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { })
+        } catch (error) { throw error }
+    }
 
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
-    req.session.user = req.user;
-    res.redirect('/');
-})
-//End github login
+    createCart = async (req, res) => {
+        try {
+            const response = await CartsService.createCart()
+            if (response.status === 200) {
+                res.status(200).send({ status: "Ok", message: "New cart added." })
+            } else {
+                res.send({ status: "Error", payload: response })
+            }
+        } catch (error) { throw error }
+    }
 
+    addToCart = async (req, res) => {
+        try {
+            const cid = req.params.cid
+            const pid = req.params.pid
 
-//-------------------------------USER UTILITIES
-router.get('/api/current', (req, res) => {
-    res.send({ status: "success", payload: req.user })
-})
-router.post('/logout', async (req, res) => {
-    req.session.destroy(error => {
-        if (error) { res.status(400).send({ error: 'logout error', message: error }) }
-        res.status(200).send('Session ended.')
-    })
-})
-//end user utilities
+            const result = await CartsService.addProductToCart(cid, pid)
+            res.status(500).send({ payload: result });
+        } catch (error) { throw error }
+    }
 
-export default router
+    updateQuantity = async (req, res) => {
+        try {
+            const cid = req.params.cid
+            const pid = req.params.pid
+
+            const quantity = req.body
+            const quantityNumber = parseInt(quantity.quantity)
+
+            const result = await CartsService.updateQuantity(cid, pid, quantityNumber)
+            res.status(200).send({ payload: result })
+
+        } catch (error) { throw error }
+    }
+
+    replaceProducts = async (req, res) => {
+        try {
+            const cid = req.params.cid
+            const newProducts = req.body
+
+            const result = await CartsService.replaceProducts(cid, newProducts)
+            res.status(200).send({ payload: result })
+
+        } catch (error) { throw error }
+    }
+
+    deleteProductFromCart = async (req, res) => {
+        try {
+            const cid = req.params.cid
+            const pid = req.params.pid
+            const result = await CartsService.deleteProductFromCart(cid, pid)
+            res.status(200).send({ payload: result })
+
+        } catch (error) { throw error }
+    }
+
+    emptyCart = async (req, res) => {
+        try {
+            const cid = req.params.cid
+            const result = await CartsService.emptyCart(cid)
+            res.status(200).send({ status: "Ok", payload: result })
+
+        } catch (error) { throw error }
+    }
+
+}
+
+export default new CartsController()

@@ -1,4 +1,4 @@
-import cartModel from "../models/carts.schemas.js";
+import cartModel from "../schemas/carts.schemas.js";
 import productManager from "./ProductManager.js";
 
 const product = new productManager();

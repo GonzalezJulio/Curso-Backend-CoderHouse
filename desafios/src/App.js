@@ -13,23 +13,24 @@ import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
 
-//Gestores de ruta
+
+import appRouter from './router/app.router.js'
+/* //Gestores de ruta
 import productsRouter from "./router/ProductRouter.js";
 import ViewsRouter from "./router/ViewsRouter.js"
 import router from './router/sessions.router.js' 
 import cartRouter from "./router/CartRouter.js";
 //Router ArqCaps
-import PRouter from './routers/products.router.js'
-
-
-// Manager
+import ProdRouter from './routers/products.router.js'
+ */
+/* // Manager
 import MessageManager from "./dao/mongodb/MessagesManager.js";
 import userManager from "./dao/mongodb/userManager.js";
 import ProductManager from "./dao/mongodb/ProductManager.js";
-import ProdRouter from "./routers/products.router.js";
+
 const manager = new userManager("user")
 const productManager = new ProductManager("products")
-const messagesDb = new MessageManager("messages")
+const messagesDb = new MessageManager("messages") */
 
 //Servidor
 const app = express();
@@ -65,22 +66,23 @@ app.use(express.static( __dirname + "/public"))
 app.use(cookieParser())
 
 
-//Routers
+/* //Routers
 app.use('/', ViewsRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter)
 app.use('/api/sessions', router)
+app.use('/api/product', ProdRouter)
 const FS = sessionFileStore(session)
 
 //Router ArqCapas
-app.use("/product", ProdRouter)
+app.use("/product", ProdRouter) */
 
 // Passport
 initPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+app.use("/", appRouter)
 
 // Socket Product
 
