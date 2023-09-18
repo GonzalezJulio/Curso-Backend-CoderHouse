@@ -1,6 +1,6 @@
 import { Router } from "express";
 import CartManager from '../models/filemanager/CartsManager.js'
-import productModel from "../dao/models/product.model.js";
+import productModel from "../models/schemas/product.model.js";
 import { authToken } from "../utils/utils.js";
 
 const cartManager = new CartManager()

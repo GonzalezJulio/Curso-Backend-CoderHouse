@@ -9,7 +9,7 @@ const router = Router()
 router.use('/', viewsRouter) 
 router.use('/api/products', productsRouter)
 router.use('/api/carts', cartsRouter)
-router.use('/api/messages', messageRouter) 
+ 
 router.use('/api/sessions', sessionsRouter) 
 
 export default router

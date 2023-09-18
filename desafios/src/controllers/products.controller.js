@@ -1,5 +1,5 @@
-import ProductsService from '../service/products.service.js';
-import ProductDTO from './DTO/product.dto.js';
+import ProductsService from '../services/product.service.js';
+import ProductDTO from './DTO/products.dto.js';
 
 
 class ProductController {

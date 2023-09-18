@@ -1,6 +1,6 @@
-import cartsModel from '../schemas/carts.schema.js'
-import CartDTO from '../../controllers/DTO/cart.dto.js'
-import productModel from '../schemas/products.schema.js'
+import cartsModel from '../schemas/carts.schemas.js'
+import CartDTO from '../../controllers/DTO/carts.dto.js'
+import productModel from '../schemas/product.model.js'
 
 class CartsDAO {
     constructor() {

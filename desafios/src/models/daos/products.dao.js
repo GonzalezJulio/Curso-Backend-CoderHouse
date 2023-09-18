@@ -1,4 +1,4 @@
-import productsModel from '../schemas/products.schema.js'
+import productsModel from '../schemas/product.model.js'
 
 class ProductsDAO {
     constructor() {
