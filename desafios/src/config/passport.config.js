@@ -3,6 +3,7 @@ import local from 'passport-local'
 import userModel from '../models/schemas/user.model.js'
 import { createHash, isValidPassword} from '../utils/utils.js'
 import gitHubService from 'passport-github2'
+import 'dotenv/config'
 
 const LocalStrategy = local.Strategy
 
@@ -47,9 +48,9 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (userE
 
 //github
 passport.use('github', new gitHubService({
-    clientID: 'Iv1.1062e43695f36ec5',
-    clientSecret:'22683503c4b83ee214ea2ca6d51843c7c3e6ded1' ,
-    callbackURL: 'http://localhost:8080/api/sessions/callback'
+    clientID: process.env.GITHUB_CLIENTID,
+    clientSecret: process.env.GITHUB_CLIENTSECRET,
+    callbackURL: process.env.GITHUB_CALLBACK
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         console.log('passport strat GitHubService profile is:')

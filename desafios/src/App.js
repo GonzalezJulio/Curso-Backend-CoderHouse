@@ -12,6 +12,7 @@ import sessionFileStore from "session-file-store";
 import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
+import 'dotenv/config'
 
 
 import appRouter from './router/app.router.js'
@@ -39,7 +40,7 @@ app.use(express.json());
 const httpServer = HTTPServer(app)
 
 //Conexion a mongoose
-const conn = await mongoose.connect(`mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
+const conn = await mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
 
 app.use(session({
   secret: "superseguronadieve",
@@ -47,7 +48,7 @@ app.use(session({
   saveUninitialized: true,
 /* store: new FS ({ path: "./sessions" }) */
 store: new MongoStore({
-  mongoUrl: `mongodb+srv://aresden113:AB2ZAspj18@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`,
+  mongoUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`,
   ttl: 30,
 }),
 ttl: 30,
