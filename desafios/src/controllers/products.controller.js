@@ -32,6 +32,7 @@ class ProductController {
             const newProduct = req.body
             const completeProduct = new ProductDTO(newProduct)
             const response = await ProductsService.createProduct(completeProduct)
+            console.log(response)
             res.status(200).send(response)
         } catch (error) {
             res.status(400).send({ status: 'Error 400', message: error.message });

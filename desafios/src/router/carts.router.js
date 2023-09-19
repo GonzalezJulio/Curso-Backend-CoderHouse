@@ -1,33 +1,33 @@
 import { Router } from 'express'
 import CartsController from '../controllers/carts.controller.js'
 
-const cartRouter = Router()
+const router = Router()
 
 //-----api/carts
 
 //GET CARTS
-cartRouter.get('/', CartsController.getAll)
+router.get('/', CartsController.getAll)
 
 //GET BY ID
-cartRouter.get('/:cid', CartsController.getCartById)
+router.get('/:cid', CartsController.getCartById)
 
 //CREATE CART
-cartRouter.post('/', CartsController.createCart)
+router.post('/', CartsController.createCart)
 
 //ADD TO CART
-cartRouter.post('/:cid/products/:pid', CartsController.addToCart)
+router.post('/:cid/product/:pid', CartsController.addToCart)
 
 //UPDATE QUANTITY OF PRODUCT IN CART
-cartRouter.put('/:cid/products/:pid', CartsController.updateQuantity)
+router.put('/:cid/products/:pid', CartsController.updateQuantity)
 
 //UPDATE ARRAY OF PRODUCTS IN CART
-cartRouter.put('/:cid', CartsController.replaceProducts)
+router.put('/:cid', CartsController.replaceProducts)
 
 //DELETE PRODUCT FROM CART
-cartRouter.delete('/:cid/products/:pid', CartsController.deleteProductFromCart)
+router.delete('/:cid/products/:pid', CartsController.deleteProductFromCart)
 
 //EMPTY CART
-cartRouter.delete('/:cid', CartsController.emptyCart)
+router.delete('/:cid', CartsController.emptyCart)
 
 
-export default cartRouter
+export default router

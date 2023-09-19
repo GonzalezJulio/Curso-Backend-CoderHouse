@@ -1,4 +1,4 @@
-import cartsModel from '../schemas/carts.schemas.js'
+import cartsModel from "../schemas/carts.schemas.js"
 import CartDTO from '../../controllers/DTO/carts.dto.js'
 import productModel from '../schemas/product.model.js'
 
@@ -7,21 +7,21 @@ class CartsDAO {
         console.log('Carts DAO connected.')
     }
 
-    getAll = async () => {
+    async getAll() {
         try {
-            let carts = await cartsModel.find().lean()
-            return carts.length <= 0 ? ({ status: 500, message: 'Carts collection is empty.' }) : ({ carts })
+            const carts = await cartsModel.find().lean()
+            return carts
         } catch (error) { throw error }
     }
 
-    getCartById = async (cid) => {
+    async getCartById(cid){
         try {
             let cart = await cartsModel.findById(cid).populate('products', 'product')
             return cart
         } catch (error) { throw error }
     }
 
-    createCart = async () => {
+    async createCart(){
         try {
             let newCart = new CartDTO()
             await cartsModel.create(newCart)
@@ -29,7 +29,7 @@ class CartsDAO {
         } catch (error) { throw error }
     }
 
-    addProductToCart = async (cid, pid) => {
+    async addProductToCart(cid, pid) {
         try {
             const thisCart = await cartsModel.findById(cid)
             if (!thisCart) { return { status: 500, message: 'Cart doesnt exist, check id.' } }
@@ -54,7 +54,7 @@ class CartsDAO {
         } catch (error) { throw error }
     }
 
-    updateQuantity = async (cid, pid, quantity) => {
+    async updateQuantity(cid, pid, quantity) {
         try {
             const thisCart = await cartsModel.findById(cid);
             if (!thisCart) return { status: 404, message: 'Cart not found' };
@@ -77,7 +77,7 @@ class CartsDAO {
         }
     };
 
-    replaceProducts = async (cid, newProducts) => {
+    async replaceProducts(cid, newProducts) {
         try {
             const thisCart = await cartsModel.findById(cid);
             if (!thisCart) return { status: 404, message: 'Cart not found' };
@@ -99,7 +99,7 @@ class CartsDAO {
         }
     };
 
-    deleteProductFromCart = async (cid, pid) => {
+    async deleteProductFromCart(cid, pid) {
         try {
             const thisCart = await cartsModel.findById(cid);
             if (!thisCart) return { status: 500, message: 'Cart does not exist, check ID.' };
@@ -117,7 +117,7 @@ class CartsDAO {
         }
     };
 
-    emptyCart = async (cid) => {
+    async emptyCart(cid) {
         try {
             const thisCart = await cartsModel.findById(cid);
             if (!thisCart) return { status: 500, message: 'Cart does not exist, check ID.' }

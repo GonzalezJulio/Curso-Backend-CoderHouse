@@ -31,8 +31,9 @@ class ProductsDAO {
     //NEW PRODUCT
     createProduct = async (product) => {
         try {
-            await productsModel.create(product)
-            return ({ status: 200, message: `Product added.`, payload: product })
+            const NewProducts = await productsModel.create(product)
+            console.log(NewProducts)
+            return (NewProducts)
         } catch (error) {
             throw error;
         }
@@ -62,16 +63,7 @@ class ProductsDAO {
     };
 
 
-    //generateNewCode 7 digits
-    generateNewCode = async () => {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let randomCode = '';
-        for (let i = 0; i < 7; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            randomCode += characters[randomIndex];
-        }
-        return randomCode
-    }
+    
 }
 
 export default new ProductsDAO()

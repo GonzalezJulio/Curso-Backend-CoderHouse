@@ -33,15 +33,7 @@ export const authToken = (req, res, next) => {
     })
 }
 
-export const generateNewCode = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomCode = '';
-    for (let i = 0; i < 7; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        randomCode += characters[randomIndex];
-    }
-    return randomCode
-}
+
 
 
 const __filename = fileURLToPath(import.meta.url);

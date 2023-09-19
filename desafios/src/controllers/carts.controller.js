@@ -1,9 +1,12 @@
+import CartsService from '../services/carts.service.js'
+
+
 class CartsController {
 
-    getAll = async (req, res) => {
+    async getAll (req, res) {
         try {
             const allCarts = await CartsService.getAll()
-            res.status(200).send({ total: allCarts.carts.length, payload: allCarts })
+            res.status(200).send(allCarts)
         } catch (error) { throw error }
     }
 

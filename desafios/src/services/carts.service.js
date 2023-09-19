@@ -7,6 +7,7 @@ class CartsService {
     async getAll() {
         try {
             return await CartsDAO.getAll()
+           
         } catch (error) { throw error }
     }
 
