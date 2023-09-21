@@ -29,9 +29,9 @@ export default class userManager {
       const user = await userModel.findOne({ username });
       user.user.avatar = profile_picture;
       await user.save();
-      const userObject = user.toObaject();
+      const userObject = user.toObject();
       const userJSON = await model.find({});
-      /* res.render("index", { prod: products } ) */
+      res.render("index", { prod: products } )
       
     };
 
