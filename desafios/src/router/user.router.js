@@ -4,8 +4,8 @@ import UserController from '../controllers/users.controller.js';
 const router = Router()
 
 router.get('/', UserController.getUser)
-router.get('/:name', UserController.getUserByName)
+router.get('/:_id', UserController.getUserByName)
 router.post('/', UserController.createUser)
-router.delete('/:name', UserController.deleteUser)
+router.delete('/:_id', UserController.deleteUser)
 
 export default router

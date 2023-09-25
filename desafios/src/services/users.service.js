@@ -7,12 +7,13 @@ class UserService {
     async getUser() {
         try{
             return await UserDAO.getUser()
+            
         }catch (error) { throw error}
     }
 
-    async getUserByName(email) {
+    async getUserByName(_id) {
         try{
-            const user = await UserDAO.getUserByName({ email })
+            const user = await UserDAO.getUserByName({ _id })
             if(user === null ) return { status: 'error', message: 'Usuraio No Encontrado'}
             return user
         }catch (error){throw error}
@@ -25,9 +26,9 @@ class UserService {
         }catch(error) {throw error}
     }
 
-    async deleteUser(email) {
+    async deleteUser(_id) {
         try{
-            const response = await UserDAO.deleteUser(email)
+            const response = await UserDAO.deleteUser(_id)
             return response;
         }catch (error){throw error}
     }
