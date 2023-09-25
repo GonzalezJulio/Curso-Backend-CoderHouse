@@ -8,7 +8,6 @@ import { Server as SocketServer } from "socket.io";
 import {Server as HTTPServer} from "http";
 import MongoStore from "connect-mongo";
 import session from "express-session"
-import sessionFileStore from "session-file-store";
 import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
@@ -16,22 +15,7 @@ import 'dotenv/config'
 
 
 import appRouter from './router/app.router.js'
-/* //Gestores de ruta
-import productsRouter from "./router/ProductRouter.js";
-import ViewsRouter from "./router/ViewsRouter.js"
-import router from './router/sessions.router.js' 
-import cartRouter from "./router/CartRouter.js";
-//Router ArqCaps
-import ProdRouter from './routers/products.router.js'
- */
-/* // Manager
-import MessageManager from "./dao/mongodb/MessagesManager.js";
-import userManager from "./dao/mongodb/userManager.js";
-import ProductManager from "./dao/mongodb/ProductManager.js";
 
-const manager = new userManager("user")
-const productManager = new ProductManager("products")
-const messagesDb = new MessageManager("messages") */
 
 //Servidor
 const app = express();
@@ -67,17 +51,6 @@ app.use(express.static( __dirname + "/public"))
 app.use(cookieParser())
 
 
-/* //Routers
-app.use('/', ViewsRouter)
-app.use('/api/products', productsRouter);
-app.use('/api/carts', cartRouter)
-app.use('/api/sessions', router)
-app.use('/api/product', ProdRouter)
-const FS = sessionFileStore(session)
-
-//Router ArqCapas
-app.use("/product", ProdRouter) */
-
 // Passport
 initPassport();
 app.use(passport.initialize());
@@ -87,19 +60,7 @@ app.use("/", appRouter)
 
 // Socket Product
 
-io.on('connection', async (socket) => {
-  console.log('Conexion de Usuario');
-  
-  socket.emit("messageLogs")
-socket.on("message", async (data) => {
-  let user = data.user;
-  let message = data.message;
-  await messagesDb.addMessage(user, message)
-  const messages = await messagesDb.getMessages();
-  socket.emit("messageLogs", messages)
-})
 
-});
 
 
 httpServer.listen(8080,()=>console.log("ATR"));
