@@ -1,22 +1,21 @@
 import { Server } from "socket.io"
-import 
+import MessageDAO from "../models/daos/message.dao.js"
 
 
 function SetupServer (server) {
-   const io =  new SocketServer(httpServer)
-    io.on('connection', async (socket) => {
-        console.log('Conexion de Usuario');
-        
-        socket.emit("messageLogs")
-      socket.on("message", async (data) => {
-        let user = data.user;
-        let message = data.message;
-        await messagesDb.addMessage(user, message)
-        const messages = await messagesDb.getMessages();
-        socket.emit("messageLogs", messages)
-      })
-      
-      });
-}
+  const io =  new Server(server)
+  io.on('connection', socket => {
+    console.log('Nuevo Usuario Conectado')
+    socket.on('message', async data => {
+      try{
+        await MessageDAO.saveMessage(data);
+        const allMessages = await MessageDAO.getAllMessages()
+        io.emit('messageLogs', allMessages)
+      }catch(error){
+        console.error(`Error al guarda o traer todo los mensajes ${error.message}`)
+      }
+    })
+  });
 
-export default SetupServer();
+};
+export default SetupServer;

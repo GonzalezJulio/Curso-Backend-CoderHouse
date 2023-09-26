@@ -4,8 +4,8 @@ form.addEventListener('submit', e => {
     e.preventDefault();
 
     const data = {
-        name: form.name.value,
-        lastname: form.lastname.value,
+        first_name: form.name.value,
+        last_name: form.lastname.value,
         email: form.email.value,
         age: form.age.value,
         password: form.password.value
@@ -21,7 +21,7 @@ form.addEventListener('submit', e => {
         .then(result => {
             if (result.status === 200) {
                 console.log("Redirecting...");
-                alert('Account created. Now log in bastard.')
+                alert('Account created.')
                 window.location.replace('/login');
             }
             if (result.status === 400) { alert('User already exists.') }

@@ -1,8 +1,14 @@
-export const protectView = (req, res, next) => {
-  if (!req.user) return res.redirect("/login");
-  next();
-};
-export const isLogged = (req, res, next) => {
-  if (req.user) return res.redirect("/profile");
-  next();
-};
+export function checkSession(req, res, next) {
+  req.session.user ?
+      next() : res.redirect('/login')
+}
+
+export function checkAdmin(req, res, next) {
+  req.session.user.role === "admin" ?
+      next() : res.status(401).send({ error: 'Not authorized for users' })
+}
+
+export function checkUser(req, res, next) {
+  req.session.user.role === "user" ?
+      next() : res.status(401).send({ error: 'Not authorized for admins' })
+}

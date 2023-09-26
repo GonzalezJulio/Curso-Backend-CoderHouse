@@ -1,5 +1,6 @@
 import passport from 'passport'
 import local from 'passport-local'
+import UserDTO from '../controllers/DTO/users.dto.js'
 import userModel from '../models/schemas/user.model.js'
 import { createHash, isValidPassword} from '../utils/utils.js'
 import gitHubService from 'passport-github2'
@@ -17,19 +18,23 @@ passport.deserializeUser(async (id, done) => {
 
 passport.use('register', new LocalStrategy(
     { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
-        const { name, lastname, email, age, password: userPassword } = req.body
         try {
-            let user = await userModel.findOne({ email: username })
-            if (user) {
-                console.log("Usuario Existente") 
-                return done(null, false)
+            const userRegisterData = req.body
+            let exists = await userModel.findOne({ email: userRegisterData.email })
+            if (exists) {
+                console.log("User already exist.")
+                return done(null, false) 
             }
-            const newUser = { name, lastname, email, age, password: createHash(userPassword) } //hasheamos el pass
+
+            const newUser = await UserDTO.createUser(userRegisterData)
             let result = await userModel.create(newUser)
             return done(null, result)
-        } catch (error) { return res.status(400).send({ status: "error", error: "" }) }
+        } catch (error) {
+            throw error
+        }
     }
 ))
+
 
 //login strategy
 passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (userEmail, password, done) => {

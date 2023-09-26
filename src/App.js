@@ -12,6 +12,7 @@ import passport from "passport";
 import { initPassport } from "./config/passport.config.js";
 import cookieParser from "cookie-parser";
 import 'dotenv/config'
+import SetupServer from './chat/socket.chat.js'
 
 
 import appRouter from './router/app.router.js'
@@ -40,8 +41,6 @@ ttl: 30,
 
 
 
-const io =  new SocketServer(httpServer)
-
 
 app.engine("handlebars",handlebars.engine())
 app.set("views",__dirname + "/views")
@@ -59,7 +58,7 @@ app.use(passport.session());
 app.use("/", appRouter)
 
 // Socket Product
-
+SetupServer(httpServer)
 
 
 

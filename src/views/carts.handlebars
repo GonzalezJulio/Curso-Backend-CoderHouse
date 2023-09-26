@@ -3,13 +3,18 @@
 <button style="width: 120px" id="logout">Logout </button>
 {{#each carts}}
   <div>
-    <p>Carrito ID: {{this._id}}</p>
-    <p>Products in Cart: </p>
+    <h5>Carrito ID: {{this._id}}</h5>
     <ul>
-      {{#each this.products}}
-        <li>Product: {{this.product}}</li>
-        <li>Quantity: {{this.quantity}}</li>
-      {{/each}}
+      <br />
+      <p>Products in Cart: </p>
+      <ul>
+        {{#each this.products}}
+          <li>Product: {{this.product.title}}</li>
+          <li>_id: {{this.product._id}}</li>
+          <li>Quantity: {{this.quantity}}</li>
+          <br />
+        {{/each}}
+      </ul>
     </ul>
   </div>
 {{/each}}

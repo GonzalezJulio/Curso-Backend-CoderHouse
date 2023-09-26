@@ -1,6 +1,6 @@
-import messageModel from '../schemas/messages.schema.js';
+import messageModel from '../schemas/messages.model.js'
 
-class MessagesDAO {
+class MessageDAO {
     constructor() {
         console.log('Messages DAO connected.')
     }
@@ -20,4 +20,4 @@ class MessagesDAO {
     }
 }
 
-export default new MessagesDAO()
+export default new MessageDAO()
