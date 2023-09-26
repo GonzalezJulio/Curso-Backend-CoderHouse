@@ -17,16 +17,16 @@ router.get('/failedregister', async (req, res) => {
 router.post('/login', passport.authenticate('login', { failureRedirect: '/failedloginauth' }), async (req, res) => {
     if (!req.user) return res.status(400).send({ status: 'error', error: 'Invalid credentials' })
     req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        last_name: req.user.last_name,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        
         email: req.user.email,
         age: req.user.age,
         password: req.user.password,
         cartId: req.user.cartId,
         role: req.user.role
     }
-    res.status(200).send({ status: 200, message: `${req.user.first_name} ${req.user.last_name} logged in.` })
+    res.status(200).send({ status: 200, message: `${req.user.name} ${req.user.lastname} logged in.` })
 })
 router.get('/failedloginauth', async (req, res) => {
     console.log('Login failed.')
@@ -34,7 +34,7 @@ router.get('/failedloginauth', async (req, res) => {
 })
 
 router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { })
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
+router.get('/callback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
     req.session.user = req.user;
     res.redirect('/');
 })
