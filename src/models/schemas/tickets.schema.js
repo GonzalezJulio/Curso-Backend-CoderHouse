@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const collectionName = 'tickets'
 
-const ticketsSchema = mongoose.Schema({
+const ticketsSchema = new mongoose.Schema({
     code: {
         type: String,
         unique: true,
@@ -18,7 +18,7 @@ const ticketsSchema = mongoose.Schema({
     },
     purchaser: {
         type: String,
-        required: true,
+        
     }
 })
 

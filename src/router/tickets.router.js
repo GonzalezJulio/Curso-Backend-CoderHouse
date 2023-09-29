@@ -8,5 +8,5 @@ const router = Router()
 
 router.get('/', ticketsController.getAll)
 router.get('/:cid/purchase', cartsController.createTicket)
-
+// probar cambios con el 
 export default router

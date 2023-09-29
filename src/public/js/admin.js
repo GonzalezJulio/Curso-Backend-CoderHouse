@@ -2,7 +2,7 @@ const form = document.getElementById('productsCrud')
 form.addEventListener('submit', e => {
     e.preventDefault()
     const data = {
-        title: form.title.valueOf,
+        title: form.title.value,
         description: form.description.value,
         category: form.category.value,
         price: parseInt(form.price.value),

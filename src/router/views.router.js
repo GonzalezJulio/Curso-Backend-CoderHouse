@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
     const toChat = 'http://localhost:8080/chat'
     const toCurrent = 'http://localhost:8080/api/sessions/current'
     const toAdmin = 'http://localhost:8080/admin'
-    const toPurchase = 'http://localhost:8080/api/tickets/6500b2f27498919c55e6d7f8/purchase'
+    const toPurchase = 'http://localhost:8080/api/tickets/${productId}/purchase'
     
     res.render('landing', { toProducts, toCarts, toLogin, toRegister, toProfile, toChat, toCurrent, toAdmin, toPurchase })
 })

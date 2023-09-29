@@ -8,9 +8,7 @@
   <h5>{{title}}</h5>
   <p>{{description}}</p>
   <h5>{{price}}</h5>
-  <button id="addToCart" style="width: 120px" type="submit" data-product-id="{{_id}}" <!-- Add the product's ID as a
-    data attribute -->
-    >Add to cart</button>
+  <button id="addCart" style="width: 120px" type="submit" data-product-id="{{_id}}">Agregar la Carrito</button>
     </div>
 </section>
 {{/each}}
@@ -18,11 +16,11 @@
 <div style="flex-direction: row;justify-content: space-around">
   {{#if hasPrevPage}}
   <a
-    href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{prevPage}}{{#if category}}&category={{category}}{{/if}}"><button>Next Page</button></a>
+    href="http://localhost:8081/products/?limit={{limit}}&sort={{sort}}&page={{prevPage}}{{#if category}}&category={{category}}{{/if}}"><button>Next Page</button></a>
   {{/if}}
   {{#if hasNextPage}}
   <a
-    href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{nextPage}}{{#if category}}&category={{category}}{{/if}}"><button>Previous Page</button></a>
+    href="http://localhost:8081/products/?limit={{limit}}&sort={{sort}}&page={{nextPage}}{{#if category}}&category={{category}}{{/if}}"><button>Previous Page</button></a>
   {{/if}}
 </div>
 <script src="/js/addCart.js"></script>

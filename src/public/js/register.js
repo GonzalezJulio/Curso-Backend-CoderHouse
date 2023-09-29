@@ -4,8 +4,8 @@ form.addEventListener('submit', e => {
     e.preventDefault();
 
     const data = {
-        first_name: form.name.value,
-        last_name: form.lastname.value,
+        name: form.name.value,
+        lastname: form.lastname.value,
         email: form.email.value,
         age: form.age.value,
         password: form.password.value

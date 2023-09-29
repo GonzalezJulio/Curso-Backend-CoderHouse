@@ -1,22 +1,22 @@
-import productService from "./product.service.js";
-import cartsService from "./carts.service.js";
-import TicketDTO from "../controllers/DTO/ticket.dto.js";
-import ticketsDao from "../models/daos/tickets.dao.js"
+import ProductsService from "./product.service.js";
+import CartsService from "./carts.service.js";
+import TicketDTO from "../controllers/DTO/tickets.dto.js";
+import TicketsDAO from "../models/daos/tickets.dao.js"
 
 class TicketService {
 
     getAll = async (user, cid) => {
-        const response = await ticketsDao.getAll()
+        const response = await TicketsDAO.getAll()
         return response
     }
 
     createTicket = async (user, cid) => {
         try {
-            if (user.cartId !== cid) return { error: 'Cart Id and cid doesnt match' };
-            const thisCart = await cartsService.getCartById(cid);
+            /* if (user.cartId !== cid) return { error: 'Cart Id and cid doesnt match' }; */
+            const thisCart = await CartsService.getCartById(cid);
             if (!thisCart) return { error: 'Cart not found not found' };
 
-            //--------------Inicia ciclo FOR 
+            
             const cartFilterOutStock = [];
             const productsForTicket = [];
             let totalPrice = 0;
@@ -30,7 +30,7 @@ class TicketService {
                     const remainingStock = product.stock - quantity;
                     totalPrice += product.price * quantity;
 
-                    await productsService.updateProduct(product._id, { stock: remainingStock })
+                    await ProductsService.updateProduct(product._id, { stock: remainingStock })
 
                     productsForTicket.push({
                         product: {
@@ -42,9 +42,7 @@ class TicketService {
                     });
                 }
             }
-            //--------------Termina ciclo FOR
-
-            //Validamos si al menos un producto fue comprado
+            
             if (productsForTicket.length === 0) {
                 return {
                     status: 204,
@@ -52,12 +50,12 @@ class TicketService {
                     message: "No se pudo comprar ningun producto por falta de stock"
                 }
             } else {
-                //Actualizamos valores del carrito de entrada
+                
                 thisCart.products = cartFilterOutStock;
-                //Procedemos a realizar la compra
-                const newTicket = new TicketDTO(totalPrice, user.email)
-                const ticketResponse = await ticketsDao.createTicket(newTicket)
-                const updatedCart = await cartsService.replaceProducts(cid, thisCart.products)
+                
+                const newTicket = new TicketDTO(totalPrice)
+                const ticketResponse = await TicketsDAO.createTicket(newTicket)
+                const updatedCart = await CartsService.replaceProducts(cid, thisCart.products)
 
                 //No escencial
                 const info = {
@@ -65,6 +63,7 @@ class TicketService {
                     purchasedItems: productsForTicket,
                     ticket: ticketResponse
                 };
+                console.log(info)
                 return info;
             }
         } catch (error) {

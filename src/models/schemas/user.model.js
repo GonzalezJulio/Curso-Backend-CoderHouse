@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const collectionName = 'users'
 const userSchema = new mongoose.Schema({
-    first_name: String,
-    last_name: String,
+    name: String,
+    lastname: String,
     email: {
         type: String,
         unique: true
@@ -11,8 +11,7 @@ const userSchema = new mongoose.Schema({
     age: Number,
     password: {
         type: String
-        // required: true //desactivado para que auth de github funcione, actualizar mas adelante.
-
+        
     },
     cartId: {
         type: mongoose.Schema.Types.ObjectId,

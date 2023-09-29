@@ -1,5 +1,5 @@
 import CartsService from '../services/carts.service.js'
-
+import TicketService from '../services/tickets.service.js'
 
 class CartsController {
 
@@ -82,6 +82,19 @@ class CartsController {
             res.status(200).send({ status: "Ok", payload: result })
 
         } catch (error) { throw error }
+    }
+
+    createTicket = async (req, res) => {
+        try {
+            console.log('ticket controller')
+            const cid = req.params.cid
+            const user = req.session.user
+            const response = await TicketService.createTicket(user, cid)
+            res.status(200).json(response)
+
+        } catch (error) {
+            throw error
+        }
     }
 
 }

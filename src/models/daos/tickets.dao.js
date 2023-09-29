@@ -1,4 +1,5 @@
-import ticketsModel from './../schemas/tickets.schema.js';
+import ticketsModel from '../schemas/tickets.schema.js'
+
 
 class TicketsDAO {
     constructor() {

@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-const addToCartButtons = document.querySelectorAll('#addToCart')
+const addToCartButtons = document.querySelectorAll('addCart')
     addToCartButtons.forEach(button => {
         button.addEventListener('click', () => {
             const productId = button.dataset.productId;
-            fetch(`http://localhost:8080/api/tickets/${productId}/purchase`, {
+            fetch(`api/tickets/${productId}/purchase`, {
                 method: 'POST',
+                
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -16,6 +17,7 @@ const addToCartButtons = document.querySelectorAll('#addToCart')
                 .catch(error => {
                     console.error('Error adding product to cart:', error);
                 });
+                
         });
     });
 })
