@@ -19,7 +19,7 @@ class UserDTO {
     user.age = userRegisterData.age;
     user.email = userRegisterData.email;
     user.password = await this.createHash(userRegisterData.password);
-    /* user.cartId = await this.createCartForUser(); */
+    user.cartId = await this.createCartForUser();
     user.role = userRegisterData.role
     return user;
   }

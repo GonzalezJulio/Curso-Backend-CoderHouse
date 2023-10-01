@@ -7,6 +7,7 @@ import userRouter from './user.router.js'
 import messageRouter from './message.router.js'
 import ticketsRouter from './tickets.router.js'
 import MailingRouter from './mailing.router.js'
+import ProductMocking from '../mocking/mocking.js'
 const router = Router()
 
 router.use('/', viewsRouter) 
@@ -17,4 +18,5 @@ router.use('/api/sessions', sessionsRouter)
 router.use('/api/messages', messageRouter)
 router.use('/api/tickets', ticketsRouter)
 router.use('/mailing', MailingRouter)
+/* router.use('/mocking') */
 export default router

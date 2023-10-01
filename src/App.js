@@ -4,7 +4,6 @@ import express from "express";
 import __dirname from "./dirname.js";
 import handlebars from "express-handlebars";
 import mongoose from 'mongoose';
-import nodemailer from 'nodemailer'
 import {Server as HTTPServer} from "http";
 import MongoStore from "connect-mongo";
 import session from "express-session"
@@ -34,6 +33,7 @@ app.use(session({
 
 store: new MongoStore({
   mongoUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`,
+  
   ttl: 30,
 }),
 ttl: 30,
@@ -60,3 +60,7 @@ SetupServer(httpServer)
 
 
 httpServer.listen(8080,()=>console.log("ATR"));
+
+
+
+useUnifiedTopology: false
