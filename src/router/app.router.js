@@ -18,5 +18,5 @@ router.use('/api/sessions', sessionsRouter)
 router.use('/api/messages', messageRouter)
 router.use('/api/tickets', ticketsRouter)
 router.use('/mailing', MailingRouter)
-/* router.use('/mocking') */
+
 export default router

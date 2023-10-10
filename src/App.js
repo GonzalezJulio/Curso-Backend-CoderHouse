@@ -47,6 +47,19 @@ app.use(express.static( __dirname + "/public"))
 app.use(cookieParser())
 
 
+// error
+/* app.use(winston)
+app.get('/api/test',(req,res)=> {
+  let response = "response" + request
+  return res.status(200).json({
+      message: "logger HTTP",
+      response: true
+  })
+})
+app.use(errorHandler) */
+
+
+
 // Passport
 initPassport();
 app.use(passport.initialize());

@@ -4,7 +4,7 @@ import productModel from "../models/schemas/product.model.js";
 import SafeUsersDTO from '../controllers/DTO/safeUser.dto.js';
 import { checkAdmin, checkSession, checkUser } from "../utils/secure.middleware.js";
 import ProductMocking from '../mocking/mocking.js'
-
+import { logger } from '../utils/logger.js'
 
 const router = Router()
 
@@ -134,4 +134,15 @@ router.get('/mockingproducts', async (req, res) => {
         res.send({ message: 'Mock products x100 created with faker and falso.', payload: randomProducts })
     } catch (error) {}
 })
+
+router.get("/logger", (req, res) => {
+    logger.error("soy un error");
+    logger.warn("soy un warn");
+    logger.info("soy un info");
+    logger.http("soy un http");
+    logger.verbose("soy un verbose");
+    logger.debug("soy un debug");
+    res.send("probando loggers");
+});
+
 export default router

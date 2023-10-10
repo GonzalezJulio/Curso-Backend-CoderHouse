@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@ngneat/falso": "^7.1.1",
+    "artillery-plugin-metrics-by-endpoint": "^1.2.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "connect-mongo": "^5.0.0",
@@ -34,7 +35,9 @@
     "passport-local": "^1.0.0",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.7.1",
-    "twilio": "^4.18.0"
+    "switch": "^0.0.0",
+    "twilio": "^4.18.0",
+    "winston": "^3.10.0"
   },
   "description": "",
   "devDependencies": {
