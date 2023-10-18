@@ -3,7 +3,6 @@ import local from 'passport-local'
 import UserDTO from '../controllers/DTO/users.dto.js'
 import userModel from '../models/schemas/user.model.js'
 import { createHash, isValidPassword} from '../utils/utils.js'
-import gitHubService from 'passport-github2'
 import 'dotenv/config'
 
 const LocalStrategy = local.Strategy
@@ -46,36 +45,6 @@ passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (userE
         }
         if (!isValidPassword(user, password)) return done(null, false)
         return done(null, user) 
-    } catch (error) {
-        return done(error)
-    }
-}))
-
-//github
-passport.use('github', new gitHubService({
-    clientID: process.env.GITHUB_CLIENTID,
-    clientSecret: process.env.GITHUB_CLIENTSECRET,
-    callbackURL: process.env.GITHUB_CALLBACK
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        // console.log('passport strat GitHubService profile is:')
-        // console.log(profile)
-        let exists = await userModel.findOne({email: profile._json.email})
-        if (!exists) {
-            let userRegisterData = {
-                name: profile._json.login,
-                lastname: '',
-                age: '',
-                email: profile._json.email,
-                password: '',
-                
-            }
-            const newUser = await UserDTO.createUser(userRegisterData)
-            let result = await userModel.create(newUser)
-            done(null, result)
-        } else {
-            done(null, exists)
-        }
     } catch (error) {
         return done(error)
     }
