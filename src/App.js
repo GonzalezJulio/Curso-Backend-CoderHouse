@@ -31,7 +31,7 @@ app.use(express.json());
 const httpServer = HTTPServer(app)
 
 //Conexion a mongoose
-/* const conn = await mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`) */ 
+const conn = await mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@lasgonzaleztienda.jyrtdk6.mongodb.net/lasgonzaleztienda`)
 
 app.use(session({
   secret: "superseguronadieve",
@@ -94,11 +94,11 @@ if(cluster.isPrimary) {
   console.log(`Worker ${process.pid}`);
   
 } */
-
 httpServer.listen(8080, () => {
   console.log("server ready on port " + 8080);
   
 });
+
 
 
 

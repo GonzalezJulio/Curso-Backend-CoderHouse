@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import CartDAO from '../../models/daos/carts.dao.js';
 
 class UserDTO {
@@ -19,7 +19,7 @@ class UserDTO {
     user.age = userRegisterData.age;
     user.email = userRegisterData.email;
     user.password = await this.createHash(userRegisterData.password);
-    user.cartId = await this.createCartForUser();
+    /* user.cartId = await this.createCartForUser(); */
     user.role = userRegisterData.role
     return user;
   }
@@ -28,7 +28,7 @@ class UserDTO {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   }
 
-  /* async createCartForUser() {
+  async createCartForUser() {
     try {
       const cartCreationResult = await CartDAO.createCart();
       if (cartCreationResult.status === 200) {
@@ -39,7 +39,7 @@ class UserDTO {
     } catch (error) {
       throw error;
     }
-  } */
+  }
 }
 
 export default new UserDTO()
