@@ -21,7 +21,7 @@ COPY . .
 # configurar el puerto de contenedor se define en la app
 # puerto de APP (por dentro del contenedor 8080)
 # puerto de APP (por fuera del contenedor 9999 prod)
-EXPOSE 8080
-# EXPOSE 8888
-CMD ["npm", "start"]
-# CMD ["npm", "run", "dev"]
+# EXPOSE 9999
+EXPOSE 8888
+# CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

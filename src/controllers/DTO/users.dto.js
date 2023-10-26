@@ -19,7 +19,7 @@ class UserDTO {
     user.age = userRegisterData.age;
     user.email = userRegisterData.email;
     user.password = await this.createHash(userRegisterData.password);
-    /* user.cartId = await this.createCartForUser(); */
+    user.cartId = await this.createCartForUser();
     user.role = userRegisterData.role
     return user;
   }
@@ -32,9 +32,9 @@ class UserDTO {
     try {
       const cartCreationResult = await CartDAO.createCart();
       if (cartCreationResult.status === 200) {
-        return cartCreationResult
+        return cartCreationResult.payload._id
       } else {
-        throw new Error('Error al agregar el producto al carrito del usuario');
+        throw new Error('Failed to create a cart for the user.');
       }
     } catch (error) {
       throw error;

@@ -3,10 +3,10 @@ import TicketService from '../services/tickets.service.js'
 
 class CartsController {
 
-    async getAll (req, res) {
+    getAll = async (req, res) => {
         try {
             const allCarts = await CartsService.getAll()
-            res.status(200).send(allCarts)
+            res.status(200).send({ total: allCarts.carts.length, payload: allCarts })
         } catch (error) { throw error }
     }
 
@@ -30,12 +30,12 @@ class CartsController {
         } catch (error) { throw error }
     }
 
-    addToCart = async (req, res) => {
+    addCart = async (req, res) => {
         try {
             const cid = req.params.cid
             const pid = req.params.pid
-
-            const result = await CartsService.addProductToCart(cid, pid)
+            const user = req.session.user
+            const result = await CartsService.addProductToCart(cid, pid, user)
             res.status(500).send({ payload: result });
         } catch (error) { throw error }
     }

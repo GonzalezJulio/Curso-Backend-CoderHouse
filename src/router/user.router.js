@@ -3,9 +3,15 @@ import UserController from '../controllers/users.controller.js';
 
 const router = Router()
 
+//----api/users
 router.get('/', UserController.getUser)
-router.get('/:_id', UserController.getUserByName)
+router.get('/:uid', UserController.getUserByName)
+router.post('/generate-recovery-token', UserController.recoveryPassToken)
+router.post('/reset-password', UserController.resetPassword)
 router.post('/', UserController.createUser)
-router.delete('/:_id', UserController.deleteUser)
+router.put('/premium/:uid', UserController.changeRole)
+router.delete('/:uid', UserController.deleteUser)
+
+
 
 export default router

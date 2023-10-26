@@ -15,10 +15,9 @@ import SetupServer from './chat/socket.chat.js'
 import cluster from "cluster";
 import { cpus } from 'os';
 import appRouter from './router/app.router.js'
-import { connect } from "mongoose";
 
 //PORT
-const port = process.env.PORT || 8080;
+const port = process.env.PORT;
 
 // cluster
 const numberOfProcess = cpus().length
@@ -95,7 +94,7 @@ if(cluster.isPrimary) {
   
 } */
 httpServer.listen(8080, () => {
-  console.log("server ready on port " + 8080);
+  console.log("server ready on port ");
   
 });
 

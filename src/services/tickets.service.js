@@ -12,7 +12,7 @@ class TicketService {
 
     createTicket = async (user, cid) => {
         try {
-            if (user.cartId !== cid) return { error: 'Cart Id and cid doesnt match' };
+            if (user.cartId == cid) return { error: 'Cart Id and cid doesnt match' };
             const thisCart = await CartsService.getCartById(cid);
             if (!thisCart) return { error: 'Cart not found not found' };
 

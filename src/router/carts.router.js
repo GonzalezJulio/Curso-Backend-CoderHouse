@@ -15,7 +15,7 @@ router.get('/:cid', CartsController.getCartById)
 router.post('/', CartsController.createCart)
 
 //ADD TO CART
-router.post('/:cid/product/:pid', CartsController.addToCart)
+router.post('/:cid/products/:pid', CartsController.addCart)
 
 //UPDATE QUANTITY OF PRODUCT IN CART
 router.put('/:cid/products/:pid', CartsController.updateQuantity)

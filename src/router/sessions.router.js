@@ -2,6 +2,7 @@ import { Router } from 'express'
 import passport from 'passport'
 import SafeUsersDTO from '../controllers/DTO/safeUser.dto.js'
 import { checkAdmin, checkSession } from '../utils/secure.middleware.js'
+import userModel from '../models/schemas/user.model.js'
 
 const router = Router()
 
@@ -39,12 +40,15 @@ router.get('/callback', passport.authenticate('github', { failureRedirect: '/log
     res.redirect('/');
 })
 
-router.get('/current', checkSession, checkAdmin, (req, res) => {
+router.get('/current', checkSession, (req, res) => {
     res.send({ status: "success", payload: req.session.user })
 
 })
 
 router.post('/logout', async (req, res) => {
+    const user = await userModel.findOne({ email: req.session.user.email })
+    user.last_connection = new Date();
+    await user.save();
     req.session.destroy(error => {
         if (error) { res.status(400).send({ error: 'logout error', message: error }) }
         res.status(200).send('Session ended.')

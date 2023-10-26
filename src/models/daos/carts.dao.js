@@ -10,7 +10,7 @@ class CartsDAO {
     async getAll() {
         try {
             const carts = await cartsModel.find().lean()
-            return carts
+            return carts.length <= 0 ? ({ status: 500, message: 'Carts collection is empty.' }) : ({ carts })
         } catch (error) { throw error }
     }
 
@@ -21,22 +21,22 @@ class CartsDAO {
         } catch (error) { throw error }
     }
 
-    async createCart(){
+    createCart = async () => {
         try {
             let newCart = new CartDTO()
-            await cartsModel.create(newCart)
-            return ({ status: 200, message: 'Cart created.' })
+            const result = await cartsModel.create(newCart)
+            return ({ status: 200, message: 'Cart created.', payload: result })
         } catch (error) { throw error }
     }
 
-    async addProductToCart(cid, pid) {
+    addProductToCart = async (cid, pid) => {
         try {
             const thisCart = await cartsModel.findById(cid)
             if (!thisCart) { return { status: 500, message: 'Cart doesnt exist, check id.' } }
-
+            if (user.cartId !== thisCart._id.toString()) return { status: 401, message: 'This cart doesnt belong to you scroundel!' }
             let thisProduct = await productModel.findById(pid)
             if (!thisProduct) return { status: 500, message: 'Product doesnt exist in db, check id.' }
-
+            if (user.email || user.role === thisProduct.owner) return { status: 401, message: 'This product owner is you! You cant buy it! sod off!' }
             const productIndex = await thisCart.products.findIndex((p) => p.product._id.toString() === pid);
             if (productIndex !== -1) {
                 thisCart.products[productIndex].quantity = parseInt(thisCart.products[productIndex].quantity) + 1
@@ -87,7 +87,7 @@ class CartsDAO {
 
             const updateResult = await cartsModel.findByIdAndUpdate(cid, thisCart, { new: true });
 
-            //La validacion no funciona, le di vueltas pero siempre es true. No molesta pero fix needed.
+            
             const isCartModified = JSON.stringify(newProducts) !== initialProducts
             if (isCartModified) {
                 return { status: 200, message: `Complete products of ${cid} updated.`, payload: updateResult };

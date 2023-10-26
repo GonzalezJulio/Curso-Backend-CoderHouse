@@ -5,11 +5,20 @@ import SafeUsersDTO from '../controllers/DTO/safeUser.dto.js';
 import { checkAdmin, checkSession, checkUser } from "../utils/secure.middleware.js";
 import ProductMocking from '../mocking/mocking.js'
 import { logger } from '../utils/logger.js'
-
+import { recoveryPassToken } from '../utils/utils.js';
+import userService from "../services/users.service.js"
 const router = Router()
 
 
 router.get('/', (req, res) => {
+    const user = await usersService.getUserByEmail(req.session.user.email)
+    const { _id, name, lastname, email, role, cartId } = user
+    const currentUser = {
+        fullname: name + " " + lastname,
+        email,
+        role,
+    }
+
     const toProducts = 'http://localhost:8080/products'
     const toCarts = 'http://localhost:8080/carts'
     const toLogin = 'http://localhost:8080/login'
@@ -20,7 +29,9 @@ router.get('/', (req, res) => {
     const toAdmin = 'http://localhost:8080/admin'
     const toPurchase = 'http://localhost:8080/api/tickets/${productId}/purchase'
     const toMockingProducts = 'http://localhost:8080/mockingproducts'
-    res.render('landing', { toProducts, toCarts, toLogin, toRegister, toProfile, toChat, toCurrent, toAdmin, toPurchase, toMockingProducts })
+    const toUsers = 'http://localhost:8080/users'
+    const toCart = `http://localhost:8080/carts/${cartId}`
+    res.render('pageLanding', { currentUser, toProducts, toCarts, toLogin, toRegister, toProfile, toChat, toCurrent, toAdmin, toPurchase, toMockingProducts, toCart, toUsers })
 })
 //-------------------------------USER UTILITIES VIEWS
 router.get('/register', (req, res) => {
@@ -40,8 +51,15 @@ router.get('/login', (req, res) => {
 //-------------------------------EVERYONE
 router.get('/products', checkSession, async (req, res) => {
     try {
-        const user = req.session.user
-        
+        const user = await userService.getUserByEmail(req.session.user.email)
+        const { _id, name, lastname, email, role, cartId }
+        const currentUser = {
+            fullname: name + " " + lastname,
+            email, 
+            role,
+            _id,
+            cartId
+        }
         const page = parseInt(req.query.page) || 1
         const limit = parseInt(req.query.limit) || 5
         const sort = parseInt(req.query.sort) || -1
@@ -80,10 +98,10 @@ router.get('/products', checkSession, async (req, res) => {
     } catch (error) { res.status(500).send({ status: 'error', error: error.message }); }
 })
 
-router.get('/carts', checkSession, async (req, res) => {
-    let response = await CartDAO.getAll()
-    let carts = response.carts
-    res.render('carts', { carts })
+router.get('/carts/:cid', checkSession, async (req, res) => {
+    const cid = req.params.cid
+    const cart = await CartDAO.getCartById(cid)
+    const user = await userService.getUserByEmail(req.session.user.email)
 })
 
 router.get('/profile', checkSession, async (req, res) => {

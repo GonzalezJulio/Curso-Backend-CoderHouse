@@ -32,33 +32,44 @@ class ProductsDAO {
     createProduct = async (product) => {
         try {
             const NewProducts = await productsModel.create(product)
-            console.log(NewProducts)
-            return (NewProducts)
+            return { status: 200, message: `Producto Agregado`, payload: NewProducts } 
         } catch (error) {
             throw error;
         }
     }
 
     //UPDATE PRODUCT
-    updateProduct = async (pid, updatedFields) => {
+    updateProduct = async (pid, newData, user) => {
         try {
             let foundProduct = await productsModel.findById(pid)
             if (!foundProduct) return null
-            const updatedProduct = await productsModel.findByIdAndUpdate(pid, updatedFields, { new: true });
-            return updatedProduct;
+            if(user.role === 'admin' || user.email === foundProduct.owner) {
+                const updatedProduct = await productsModel.findByIdAndUpdate(pid, newData, { new: true});
+                return updatedProduct;
+            } else {
+                return { message: 'Ud no es administrador'} 
+            }
+            
         } catch (error) {
             throw error;
         }
     }
 
+    updateStockAtPurchase = async () => {
+        console.log('entro update stock')
+    }
+
     //DELETE PRODUCT
-    deleteProduct = async (pid) => {
+    deleteProduct = async (pid, user) => {
         try {
-            const result = await productsModel.deleteOne({ _id: pid });
-            if (result.deletedCount === 0) {
-                return null
+            let foundProduct = await productsModel.findById(pid)
+            if(!foundProduct) return null
+            if (user.role === 'admin' || user.email === foundProduct.owner ) {
+            const result = await productsModel.deleteOne ({ _id: pid });
+            return {status: 200 ,message: `Product ${pid} eliminado`, payload: result };
+            } else {
+                return { message: 'No eres admin o el dueño del producto'}
             }
-            return { status: 'Success.', message: `Product ${pid} deleted.` };
         } catch (error) { return { status: 'Error', message: error.message } }
     };
 
