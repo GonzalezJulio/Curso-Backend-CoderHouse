@@ -35,7 +35,7 @@ class UserService {
 
     async getUserByEmail(email) {
         try {
-            const user = await usersDao.getUserByEmail(email)
+            const user = await UserDAO.getUserByEmail(email)
             return user
         } catch (error) {
             throw error
@@ -43,7 +43,7 @@ class UserService {
     }
     async updateUser(newData) {
         try {
-            const result = await usersDao.updateUser(newData)
+            const result = await UserDAO.updateUser(newData)
             return result
         } catch (error) {
             throw error
@@ -52,7 +52,7 @@ class UserService {
 
     async changeRole(uid) {
         try {
-            const result = await usersDao.changeRole(uid)
+            const result = await UserDAO.changeRole(uid)
             return result
         } catch (error) {
             throw error
