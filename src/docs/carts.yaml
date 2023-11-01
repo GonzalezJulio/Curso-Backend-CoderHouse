@@ -120,7 +120,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#components/schemas/Cart'
+                  $ref: '#models/schemas/Cart'
         "404":
           description: The cart or the product was not found.
         "500":
@@ -150,7 +150,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#components/schemas/Cart'
+                  $ref: '#models/schemas/Cart'
         "404":
           description: The cart or the product was not found.
         "500":
@@ -196,7 +196,7 @@ components:
             type: object
             properties:
               product:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/models/schemas/Product'
               quantity:
                 type: integer
                 description: The quantity of the product in the cart.
