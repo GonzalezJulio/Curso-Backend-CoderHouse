@@ -11,7 +11,10 @@
     "image-prod": "docker build -t app-lasgonzaleztienda-prod .",
     "image-dev": "docker build -t app-lasgonzaleztienda-dev .",
     "container-prod": "docker run -p 9999:8080 app-lasgonzaleztienda-prod",
-    "container-dev": "docker run -p 8888:8080 app-lasgonzaleztienda-dev"
+    "container-dev": "docker run -p 8888:8080 app-lasgonzaleztienda-dev",
+    "mocha": "mocha test/mocha",
+    "test": "mocha test/**"
+
   },
   "keywords": [],
   "author": "",
@@ -45,6 +48,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "switch": "^0.0.0",
+    "toastify-js": "^1.12.0",
     "twilio": "^4.18.0",
     "winston": "^3.10.0"
   },
@@ -55,6 +59,7 @@
     "mocha": "^10.2.0",
     "nodemon": "^3.0.1",
     "standard": "^17.1.0",
+    "supertest": "^6.3.3",
     "tailwindcss": "^3.3.3"
   }
 }

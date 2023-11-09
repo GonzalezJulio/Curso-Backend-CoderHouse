@@ -1,7 +1,9 @@
-import ProductsService from "./product.service.js";
-import CartsService from "./carts.service.js";
-import TicketDTO from "../controllers/DTO/tickets.dto.js";
+import TicketDTO from "../models/DTO/tickets.dto.js";
 import TicketsDAO from "../models/daos/tickets.dao.js"
+import cartsService from "./carts.service.js";
+import productsDao from "../models/daos/products.dao.js";
+import ticketsDao from "../models/daos/tickets.dao.js";
+
 
 class TicketService {
 
@@ -11,17 +13,16 @@ class TicketService {
     }
 
     createTicket = async (user, cid) => {
-        try {
-            if (user.cartId == cid) return { error: 'Cart Id and cid doesnt match' };
-            const thisCart = await CartsService.getCartById(cid);
-            if (!thisCart) return { error: 'Cart not found not found' };
+        try{
+            const thisCart = await cartsService.getCartById(cid);
+            if(!thisCart) return { error: 'Cart id not found' };
+            if(thisCart.products.lenght === 0) return { error: 'Cart its empty' };
 
-            
             const cartFilterOutStock = [];
             const productsForTicket = [];
             let totalPrice = 0;
             for (const { product, quantity } of thisCart.products) {
-                if (product.stock < quantity) {
+                if(product.stock < quantity) {
                     cartFilterOutStock.push({
                         product: product,
                         quantity: quantity
@@ -29,47 +30,42 @@ class TicketService {
                 } else {
                     const remainingStock = product.stock - quantity;
                     totalPrice += product.price * quantity;
-
-                    await ProductsService.updateProduct(product._id, { stock: remainingStock })
-
+                    await productsDao.updateProduct(product._id, { stock: remainingStock })
                     productsForTicket.push({
-                        product: {
+                        product:{
                             _id: product._id,
                             title: product.title,
                             price: product.price,
                         },
                         quantity,
-                    });
+                    })
                 }
             }
-            
-            if (productsForTicket.length === 0) {
+            if (productsForTicket.length === 0){
                 return {
                     status: 204,
-                    warning: 'no content',
-                    message: "No se pudo comprar ningun producto por falta de stock"
+                    warning: 'vacio',
+                    message: 'Producto sin stock'
                 }
-            } else {
-                
+            }else {
                 thisCart.products = cartFilterOutStock;
-                
-                const newTicket = new TicketDTO(totalPrice)
-                const ticketResponse = await TicketsDAO.createTicket(newTicket)
-                const updatedCart = await CartsService.replaceProducts(cid, thisCart.products)
+                const newTicket = new TicketDTO(totalPrice, user.email)
+                const ticketResponse = await ticketsDao.createTicket(newTicket)
+                const updateCart = await cartsService.replaceProducts(cid, thisCart.products);
+                const result = {
+                        status: 200,
+                        purchasedItems:  productsForTicket,
+                        tickewt: ticketResponse,
+                        remainingStock: updateCart
+                    };
+                return result;
 
-                //No escencial
-                const info = {
-                    updatedCart: updatedCart,
-                    purchasedItems: productsForTicket,
-                    ticket: ticketResponse
-                };
-                console.log(info)
-                return info;
+        
+
             }
-        } catch (error) {
+        }catch(error){
             throw error
         }
-    }
 }
-
+}
 export default new TicketService

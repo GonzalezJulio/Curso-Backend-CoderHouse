@@ -1,5 +1,5 @@
 import cartsModel from "../schemas/carts.schemas.js"
-import CartDTO from '../../controllers/DTO/carts.dto.js'
+import CartDTO from '../DTO/carts.dto.js'
 import productModel from '../schemas/product.model.js'
 
 class CartsDAO {
@@ -29,15 +29,17 @@ class CartsDAO {
         } catch (error) { throw error }
     }
 
-    addProductToCart = async (cid, pid) => {
+    addProductToCart = async (cid, pid, user) => {
         try {
             const thisCart = await cartsModel.findById(cid)
             if (!thisCart) { return { status: 500, message: 'Cart doesnt exist, check id.' } }
-            /* if (user.cartId !== thisCart._id.toString()) return { status: 401, message: 'This cart doesnt belong to you scroundel!' } */
+            if (user.cartId !== thisCart._id.toString()) return { status: 401, message: 'This cart doesnt belong to you scroundel!' }
+
             let thisProduct = await productModel.findById(pid)
             if (!thisProduct) return { status: 500, message: 'Product doesnt exist in db, check id.' }
-            /* if (user.email || user.role === thisProduct.owner) return { status: 401, message: 'This product owner is you! You cant buy it! sod off!' } */
-            const productIndex = await thisCart.products.findIndex((p) => p.product._id.toString() === pid);
+            if (user.role === thisProduct.owner || user.email === thisProduct.owner) return { status: 401, message: 'This product owner is you! You cant buy it! sod off!' }
+
+            const productIndex = await thisCart.products.findIndex((item) => item.product._id.toString() === pid);
             if (productIndex !== -1) {
                 thisCart.products[productIndex].quantity = parseInt(thisCart.products[productIndex].quantity) + 1
             } else {

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import CartDAO from '../models/daos/carts.dao.js'
 import productModel from "../models/schemas/product.model.js";
-import SafeUsersDTO from '../controllers/DTO/safeUser.dto.js';
+import SafeUsersDTO from '../models/DTO/safeUser.dto.js';
 import { checkAdmin, checkSession, checkUser } from "../utils/secure.middleware.js";
 import ProductMocking from '../mocking/mocking.js'
 import { logger } from '../utils/logger.js'
@@ -102,6 +102,7 @@ router.get('/products', checkSession, async (req, res) => {
 router.get('/carts/:cid', checkSession, async (req, res) => {
     const cid = req.params.cid
     const cart = await CartDAO.getCartById(cid)
+    
     const user = await userService.getUserByEmail(req.session.user.email)
     if (user.cartId.toString() !== cid) return res.status(403).send({ status: 403, message: 'This is not your carrito bitch.', cartId: user.cartId, cid })
 

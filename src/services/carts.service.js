@@ -24,9 +24,9 @@ class CartsService {
         } catch (error) { throw error }
     }
 
-    async addProductToCart(cid, pid) {
+    async addProductToCart(cid, pid, user) {
         try {
-            return await CartsDAO.addProductToCart(cid, pid)
+            return await CartsDAO.addProductToCart(cid, pid, user)
         } catch (error) { throw error }
     }
 

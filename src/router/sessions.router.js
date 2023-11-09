@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import passport from 'passport'
-import SafeUsersDTO from '../controllers/DTO/safeUser.dto.js'
+import SafeUsersDTO from '../models/DTO/safeUser.dto.js'
 import { checkAdmin, checkSession } from '../utils/secure.middleware.js'
 import userModel from '../models/schemas/user.model.js'
 

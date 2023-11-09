@@ -41,15 +41,8 @@ class ProductsDAO {
     //UPDATE PRODUCT
     updateProduct = async (pid, newData, user) => {
         try {
-            let foundProduct = await productsModel.findById(pid)
-            if (!foundProduct) return null
-            if(user.role === 'admin' || user.email === foundProduct.owner) {
-                const updatedProduct = await productsModel.findByIdAndUpdate(pid, newData, { new: true});
-                return updatedProduct;
-            } else {
-                return { message: 'Ud no es administrador'} 
-            }
-            
+            const updatedProduct = await productsModel.findByIdAndUpdate(pid, newData, { new: true });
+            return updatedProduct;
         } catch (error) {
             throw error;
         }

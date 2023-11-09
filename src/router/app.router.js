@@ -12,7 +12,7 @@ const router = Router()
 
 router.use('/', viewsRouter) 
 router.use('/api/products', productsRouter)
-router.use('/api/carts', cartRouter)
+router.use('/api/carts', checkSession, cartRouter)
  router.use('/auth', userRouter)
 router.use('/api/sessions', sessionsRouter) 
 router.use('/api/messages', messageRouter)

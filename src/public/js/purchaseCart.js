@@ -5,7 +5,7 @@ purchaseButton.addEventListener('click', () => {
 
 
     fetch(`http://localhost:8080/api/tickets/${cid}/purchase`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }

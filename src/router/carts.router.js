@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import CartsController from '../controllers/carts.controller.js'
+import { checkSession } from '../utils/secure.middleware.js'
 
 const router = Router()
 
@@ -15,7 +16,7 @@ router.get('/:cid', CartsController.getCartById)
 router.post('/', CartsController.createCart)
 
 //ADD TO CART
-router.post('/:cid/products/:pid', CartsController.addCart)
+router.post('/:cid/products/:pid', checkSession, CartsController.addCart)
 
 //UPDATE QUANTITY OF PRODUCT IN CART
 router.put('/:cid/products/:pid', CartsController.updateQuantity)

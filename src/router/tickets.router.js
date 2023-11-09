@@ -7,6 +7,6 @@ const router = Router()
 
 
 router.get('/', checkAdmin, ticketsController.getAll)
-router.get('/:cid/purchase', cartsController.createTicket)
+router.post('/:cid/purchase', cartsController.createTicket)
 
 export default router

@@ -87,6 +87,25 @@ class UserDAO {
             throw error;
         }
     }
+    uploadCredentials = async (req, res) => {
+        if (!req.files['profile'] || !req.files['address'] || !req.files['account']) {
+            return res.status(400).send({ status: 'error', message: 'No se encontraron todos los archivos esperados o no se especificó el propósito.' });
+        }
+        //Capturamos los archivos
+        const profileImage = req.files['profile'][0];
+        const addressImage = req.files['address'][0];
+        const accountImage = req.files['account'][0];
+
+        //Agregamos los documentos al usuario
+        const user = await usersService.getUserByEmail(req.session.user.email)
+        user.documents = [
+            { name: 'profile', reference: profileImage.path },
+            { name: 'address', reference: addressImage.path },
+            { name: 'account', reference: accountImage.path }
+        ];
+        const response = await usersService.updateUser(user)
+        res.status(200).send({ status: 'Success', payload: response });
+    }
 };
 
 export default new UserDAO()
