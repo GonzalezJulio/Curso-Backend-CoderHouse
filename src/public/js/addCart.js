@@ -1,42 +1,38 @@
-<h2>PRODUCTS VIEW</h2>
-<a href='http://localhost:8080/'> <button> Home </button></a>
-<h3>Welcome {{currentUser.fullname}} {{curreentUser.cartId}}. ROLE: {{currentUser.role}}</h3>
-<button style="width: 120px" id="logout">Logout </button>
-To your cart:
-    <a href="http://localhost:8080/carts/{{currentUser.cartId}}"></a>
-    <div class="product-container">
-{{#each products}}
-  <div class="product-card">
-  <h3 class="product-title">Title: {{title}}</h3>
-  <p class="product-description">Description: {{description}}</p>
-  <h4 class="product-price">Price: {{price}}</h4>
-  <h4>Stock: {{stock}}</h4>
-  <h4>Owner: {{owner}}</h4>
-<div class="product-container">
-  <button id="addToCart" style="width: 120px" type="submit" 
-  data-pid="{{_id}}" 
-  data-uid="{{../currentUser._id}}" 
-  data-cid="{{../currentUser.cartId}}"
-  >Add to cart</button>
-      <button id="deleteProduct" style="width: 120px" type="submit" 
-  data-pid="{{_id}}" 
-  data-title="{{title}}" 
-  >Delete Product</button>
-  </div>
-    </div>
+const addButton = document.querySelectorAll("#addCart");
 
-{{/each}}
-</div>
-{{! validacion de queries para el handlebar, limit SIEMPRE llega, porque lo valida el router}}
-<div style="flex-direction: row;justify-content: space-around;background-color: #588956">
-  {{#if hasPrevPage}}
-  <a
-    href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{prevPage}}{{#if category}}&category={{category}}{{/if}}"><button>Next Page</button></a>
-  {{/if}}
-  {{#if hasNextPage}}
-  <a
-    href="http://localhost:8080/products/?limit={{limit}}&sort={{sort}}&page={{nextPage}}{{#if category}}&category={{category}}{{/if}}"><button>Previous Page</button></a>
-  {{/if}}
-</div>
-<script src="/js/logout.js"></script>
-<script src="/js/addToCart.js"></script>
+addButton.forEach(button => {
+    button.addEventListener("click", () => {
+        const pid = button.dataset.pid;
+        const cid = button.dataset.cid;
+        fetch(`http://localhost:8080/api/carts/${cid}/products/${pid}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.payload.status === 200) {
+                    Toastify({
+                        text: "Product added to cart.",
+                        duration: 3000,
+                        destination: `http://localhost:8080/carts/${cid}`,
+                        newWindow: false,
+                        close: true,
+                        gravity: "bottom",
+                        position: "right",
+                        stopOnFocus: true,
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        },
+                        onClick: function () { }
+                    }).showToast();
+                } else {
+                    alert('Something went wrong with the fetch, oh the stench of failure...' + JSON.stringify(data.payload.message))
+                }
+            })
+            .catch((error) => {
+                console.error("Fetch catch, Error al agregar al carrito:", error);
+            });
+    });
+});

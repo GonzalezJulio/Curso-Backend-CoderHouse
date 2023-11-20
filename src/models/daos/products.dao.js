@@ -37,6 +37,15 @@ class ProductsDAO {
             throw error;
         }
     }
+    createMany = async (arrayOfProducts) => {
+        try {
+            // await productsModel.deleteMany({});
+            const response = await productsModel.insertMany(arrayOfProducts)
+            return { status: 200, message: `Product added.`, payload: response }
+        } catch (error) {
+            throw error;
+        }
+    }
 
     //UPDATE PRODUCT
     updateProduct = async (pid, newData, user) => {

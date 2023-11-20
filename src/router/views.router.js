@@ -32,7 +32,8 @@ router.get('/', checkSession, async (req, res) => {
     const toMockingProducts = 'http://localhost:8080/mockingproducts'
     const toUsers = 'http://localhost:8080/users'
     const toCart = `http://localhost:8080/carts/${cartId}`
-    res.render('pageLanding', { currentUser, toProducts, toCarts, toLogin, toRegister, toProfile, toChat, toCurrent, toAdmin, toPurchase, toMockingProducts, toCart, toUsers })
+    const toTickets = 'http://localhost:8080/api/tickets'
+    res.render('pageLanding', { currentUser, toProducts, toCarts, toLogin, toRegister, toProfile, toChat, toCurrent, toAdmin, toPurchase, toMockingProducts, toCart, toUsers, toTickets })
 })
 //-------------------------------USER UTILITIES VIEWS
 router.get('/register', (req, res) => {

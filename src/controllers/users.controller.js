@@ -2,6 +2,7 @@ import UserService from '../services/users.service.js'
 import 'dotenv/config'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import MailingService from '../mailing/mailing.js'
 
 class UserController {
 
@@ -40,8 +41,8 @@ class UserController {
     
     createUser = async (req, res) => {
         try{
-            const User = req.body
-            const response = await UserService.createUser(User)
+            const userRegisterData = req.body
+            const response = await UserService.createUser(userRegisterData)
             res.status(200).send(response)
         }catch(error){
             res.status(400).send({ status: 'Error 400', message: error.message });
@@ -49,8 +50,12 @@ class UserController {
     }
     changeRole = async (req, res) => {
         const uid = req.params.uid
-        const result = await UserService.changeRole(uid)
-        res.status(200).send({ payload: result });
+        const user = await UserService.getUserById(uid)
+        if (user.documents.length === 3) {
+            const result = await UserService.changeRole(uid)
+            res.status(200).send({ payload: result });
+        }
+        res.status(403).send({ status: 403, message: 'Not allowed. Credentials files not yet uploaded.' });
     }
 
     deleteUser = async (req, res) => {
