@@ -1,4 +1,4 @@
-import ProductsService from "./product.service.js";
+import productsDao from "../models/daos/products.dao.js";
 import CartsService from "./carts.service.js";
 import TicketDTO from "../controllers/DTO/tickets.dto.js";
 import TicketsDAO from "../models/daos/tickets.dao.js"
@@ -12,9 +12,9 @@ class TicketService {
 
     createTicket = async (user, cid) => {
         try {
-            if (user.cartId == cid) return { error: 'Cart Id and cid doesnt match' };
             const thisCart = await CartsService.getCartById(cid);
-            if (!thisCart) return { error: 'Cart not found not found' };
+            if (!thisCart) return { error: 'Cart Id and cid doesnt match' };
+            if (thisCart.products.length === 0) return { error: 'Cart not found not found' };
 
             
             const cartFilterOutStock = [];
@@ -30,7 +30,7 @@ class TicketService {
                     const remainingStock = product.stock - quantity;
                     totalPrice += product.price * quantity;
 
-                    await ProductsService.updateProduct(product._id, { stock: remainingStock })
+                    await productsDao.updateProduct(product._id, { stock: remainingStock })
 
                     productsForTicket.push({
                         product: {

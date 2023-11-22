@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-
+import multer from 'multer'
 
 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -69,6 +69,33 @@ export const generateNewCode = () => {
     }
     return randomCode
 }
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        let destinationFolder;
+
+        if (file.fieldname === 'profile') {
+            destinationFolder = 'profiles';
+        } else if (file.fieldname === 'address' || file.fieldname === 'account') {
+            destinationFolder = 'documents';
+        } else if (file.fieldname === 'product') {
+            destinationFolder = 'products';
+        }
+
+        cb(null, __src + '/public/uploads/' + destinationFolder);
+    },
+    filename: (req, file, cb) => {
+        cb(null, req.session.user.email + '-' + file.fieldname + '-' + file.originalname);
+    }
+});
+
+export const uploader = multer({ storage: storage })
+
+export const userUpload = uploader.fields([
+    { name: 'profile', maxCount: 1 },
+    { name: 'address', maxCount: 1 },
+    { name: 'account', maxCount: 1 }
+])
 
 
 

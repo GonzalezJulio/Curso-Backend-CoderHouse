@@ -5,7 +5,7 @@ purchaseButton.addEventListener('click', () => {
 
 
     fetch(`http://localhost:8080/api/tickets/${cid}/purchase`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
@@ -13,7 +13,7 @@ purchaseButton.addEventListener('click', () => {
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            if (data.status === 200) {
+            /* if (data.status === 200) {
                 Toastify({
                     text: "User deleted.",
                     duration: 3000,
@@ -29,7 +29,7 @@ purchaseButton.addEventListener('click', () => {
                 }).showToast();
             } else {
                 alert('Something went wrong with the fetch, oh the stench of failure...' + JSON.stringify(data))
-            }
+            } */
         })
         .catch(error => {
             // Handle any errors

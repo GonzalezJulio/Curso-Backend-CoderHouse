@@ -37,5 +37,6 @@ addButton.forEach(button => {
                 // Handle any errors
                 console.error("Fetch catch, Error al agregar al carrito:", error);
             });
+            
     });
 });
