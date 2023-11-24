@@ -12,10 +12,10 @@ To your cart:{{currentUser.cartId}}
   <h4>Stock: {{stock}}</h4>
   <h4>Owner: {{owner}}</h4>
 <div class="product-container">
-  <button id="addCart" style="width: 120px" type="submit"
+  <button id="Cartadd" style="width: 120px" type="submit"
   data-pid="{{_id}}"
-  data-uid="{{currentUser._id}}"
-  data-cid="{{currentUser.cartId}}"
+  data-uid="{{../currentUser._id}}"
+  data-cid="{{../currentUser.cartId}}"
   >Add to cart</button>
       <button id="deleteProduct" style="width: 120px" type="submit" 
   data-pid="{{_id}}" 
@@ -38,5 +38,5 @@ To your cart:{{currentUser.cartId}}
   {{/if}}
 </div>
 <script src="/js/logout.js"></script>
-<script src="/js/addCart.js"></script>
+<script src="/js/Cartadd.js"></script>
 <script src="/js/deleteProduct.js"></script>
